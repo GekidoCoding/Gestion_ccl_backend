@@ -1,2 +1,2 @@
 # Gestion_ccl
-Projet qui informatise la gestion des reservations du ccl et des mouvements qui s'y produit 
+Backend en java Spring Boot (JPA ,etc ,... ) de Gestion des reservations et des mouvements au sein du complexe de loisirs de la CNaPS
