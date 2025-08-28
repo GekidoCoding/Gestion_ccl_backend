@@ -1,0 +1,8 @@
+package mg.cnaps.gestion.ccl.project.repository;
+
+import mg.cnaps.gestion.ccl.framework.core.repository.GenericRepository;
+import mg.cnaps.gestion.ccl.project.entity.TypeMouvement;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TypeMouvementRepo extends GenericRepository<TypeMouvement, String> { }
