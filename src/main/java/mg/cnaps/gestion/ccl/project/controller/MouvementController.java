@@ -96,6 +96,11 @@ public class MouvementController extends GenericController<Mouvement , String ,M
     public ResponseEntity<Mouvement> classerMouvement(@PathVariable String id){
         return ResponseEntity.ok(service.classerMouvement(id) );
     }
+//    @PostMapping("/creates")
+//    public ResponseEntity<Page<MouvementDto>> creates(@RequestParam("infrastructures") Infrastructure[] infrastructures ,  @RequestBody Mouvement mouvement   ){
+//
+//        return ResponseEntity.ok(service.getMouvementByInfrastructure_Id(  )) ;
+//    }
 
 
 }

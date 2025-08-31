@@ -25,4 +25,8 @@ public class TypeMouvement {
     @Column(name = "NOM_TYPE_MVT")
     private String nom;
 
+    @Column(name = "NIVEAU_PROCESSUS")
+    private Integer niveauProcessus;
+
+
 }

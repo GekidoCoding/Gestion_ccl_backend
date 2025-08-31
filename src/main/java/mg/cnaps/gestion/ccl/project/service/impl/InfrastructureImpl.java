@@ -67,7 +67,12 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
         //        Gestionnaire gestionnaire = new Gestionnaire();
         HistoriqueInfra historiqueInfra = new HistoriqueInfra();
 //        historiqueInfra.setGestionnaire(gestionnaire);
-        historiqueInfra.setEtat(entity.getEtat());
+        if (entity.getEtat() == null  || entity.getEtat().getId() == null) {
+            Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
+            System.out.println("etat Defaut :"+ etatDefaut );
+            entity.setEtat(etatDefaut);
+        }
+
         historiqueInfra.setInfrastructure(entity);
         historiqueInfra.setObservation("");
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
@@ -78,10 +83,12 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
     @Override
     public Infrastructure save(Infrastructure entity){
         entity= repository.save(entity);
-        //        Gestionnaire gestionnaire = new Gestionnaire();
         HistoriqueInfra historiqueInfra = new HistoriqueInfra();
-        //        historiqueInfra.setGestionnaire(gestionnaire);
-        historiqueInfra.setEtat(entity.getEtat());
+        if (entity.getEtat() == null  || entity.getEtat().getId() == null) {
+            Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
+            System.out.println("etat Defaut :"+ etatDefaut );
+            entity.setEtat(etatDefaut);
+        }
         historiqueInfra.setInfrastructure(entity);
         historiqueInfra.setObservation("");
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
@@ -200,6 +207,7 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
         }
         return true;
     }
+
     private boolean matchLocalisations(Infrastructure infra, Localisation[] localisations) {
         if (localisations != null && localisations.length > 0) {
             return Arrays.stream(localisations)

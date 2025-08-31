@@ -36,7 +36,7 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
     @Override
     public Client save (Client entity ){
         System.out.println(entity.toString());
-        if (entity.getEtat() == null ) {
+        if (entity.getEtat() == null  || entity.getEtat().getId() == null) {
             Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
             System.out.println("etat Defaut :"+ etatDefaut );
             entity.setEtat(etatDefaut);
