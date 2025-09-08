@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class ErrorResponse {
     private LocalDateTime timestamp;
     private int status;
@@ -15,4 +14,13 @@ public class ErrorResponse {
     private String message;
     private String path;
     private String method;
+
+
+    public ErrorResponse() {
+    }
+
+    public ErrorResponse(String message, int status) {
+        this.message = message;
+        this.status = status;
+    }
 }

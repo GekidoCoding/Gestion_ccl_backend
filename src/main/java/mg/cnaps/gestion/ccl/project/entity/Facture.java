@@ -1,6 +1,8 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
 import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
 
@@ -10,7 +12,9 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_FACTURE")
 public class Facture {
@@ -54,6 +58,7 @@ public class Facture {
 
     @Column(name = "ACOMPTE_VERSE")
     private Double acompteVerse;
+
 
     public String getDhCreation() {
       return TimestampUtil.formatTimestamp(dhCreation);

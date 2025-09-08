@@ -15,9 +15,13 @@ import java.util.List;
 @Repository
 public interface MouvementRepo extends GenericRepository<Mouvement, String> {
     Page<Mouvement> getMouvementByClient_IdOrderByDhMouvementDesc(String client_id ,  Pageable pageable);
-    List<Mouvement> getMouvementByClient_Id(String  client_id);
-    List<Mouvement> getMouvementByInfrastructure_Id(String client_id);
-    Page<Mouvement> getMouvementByInfrastructure_IdOrderByDhMouvementDesc(String infrastructureId, Pageable pageable);
+    @Query("SELECT m FROM Mouvement m WHERE m.client.id = :clientId")
+    List<Mouvement> getMouvementByClient_Id(@Param("clientId") String  clientId);
 
-    String client(Client client);
+    @Query("SELECT m FROM Mouvement m JOIN m.mouvementInfras mi WHERE mi.infrastructure.id = :infraId")
+    List<Mouvement> getMouvementByInfrastructureId(@Param("infraId") String infraId);
+
+    @Query("SELECT m FROM Mouvement m JOIN m.mouvementInfras mi WHERE mi.infrastructure.id = :infraId ORDER BY m.dhMouvement DESC")
+    Page<Mouvement> getMouvementByInfrastructureId(@Param("infraId") String infraId, Pageable pageable);
+
 }

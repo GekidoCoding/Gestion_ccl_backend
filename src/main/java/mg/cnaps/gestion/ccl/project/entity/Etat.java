@@ -2,12 +2,16 @@ package mg.cnaps.gestion.ccl.project.entity;
 
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_ETAT")
 public class Etat {

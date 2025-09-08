@@ -17,6 +17,10 @@ public class CclPropertyService {
         return cclPropertyService.getInactifCode();
     }
 
+    public Integer getProformaCode(){
+        return cclPropertyService.getProformaCode();
+    }
+
     public Integer getActifCode(){
         return cclPropertyService.getActifCode();
     }
@@ -37,9 +41,23 @@ public class CclPropertyService {
     public double getFactureRemise(){
         return cclPropertyService.getFactureRemise();
     }
-
+    public String getFrequenceDefaultId(){
+        return cclPropertyService.getFrequenceDefaultId();
+    }
     public String getReservationId(){
         return cclPropertyService.getReservationId();
+    }
+    public String getFrequenceJourId(){
+        return cclPropertyService.getFrequenceJourId();
+    }
+    public String getFrequenceHeureId(){
+        return cclPropertyService.getFrequenceHeureId();
+    }
+    public String getFrequenceNuitId(){
+        return cclPropertyService.getFrequenceNuitId();
+    }
+    public String getFrequenceMoisId(){
+        return cclPropertyService.getFrequenceMoisId();
     }
 
 }

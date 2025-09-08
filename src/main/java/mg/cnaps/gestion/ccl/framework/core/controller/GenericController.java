@@ -35,9 +35,6 @@ public abstract class GenericController<T, ID extends Serializable, S extends Ge
 
     @PutMapping("/update/{id}")
     public ResponseEntity<T> update(@PathVariable ID id, @RequestBody @Valid T dto) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(dto);
-        System.out.println("update generic miditra : " + jsonString);
         return ResponseEntity.ok(getService().update(dto, id));
     }
 

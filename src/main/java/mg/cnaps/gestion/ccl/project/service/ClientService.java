@@ -12,4 +12,5 @@ public interface ClientService extends GenericService<Client, String> {
     Page<Client> findByCriteriaPaginated(int page, int pageSize, Client criteria, List<Infrastructure> infrastructures);
 //    List<Client> findByInfrastructures(List<Infrastructure> infrastructures)
     Integer getTotalPersonnes(String clientId);
+    Integer getTotalMouvements(String clientId);
 }

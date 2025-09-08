@@ -1,6 +1,7 @@
 package mg.cnaps.gestion.ccl.project.controller;
 
 import mg.cnaps.gestion.ccl.framework.core.controller.GenericController;
+import mg.cnaps.gestion.ccl.framework.error.ErrorResponse;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.Facture;
 import mg.cnaps.gestion.ccl.project.service.EmailService;
@@ -35,6 +36,19 @@ public class FactureController extends GenericController<Facture , String ,Factu
     public ResponseEntity<List<Facture>> getFacturesByMouvement_Id(@PathVariable String id){
         return ResponseEntity.ok( service.getFacturesByMouvement_Id(id));
     }
+    @GetMapping("/default/proforma/{idMouvement}")
+    public ResponseEntity<?> getDefaultFactureProforma(@PathVariable("idMouvement") String idMouvement) {
+        try {
+            return ResponseEntity.ok(service.getDefaultFactureProformaByMouvement_Id(idMouvement));
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
 
     @PostMapping("/email/send")
     public ResponseEntity<String> sendEmail(

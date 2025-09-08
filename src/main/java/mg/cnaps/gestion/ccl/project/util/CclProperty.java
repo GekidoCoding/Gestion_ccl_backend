@@ -12,8 +12,9 @@ public class CclProperty {
     private int inactifCode;
     @Value("${etat.actif.code}")
     private int actifCode;
-    @Value("${etat.proformat.code}")
-    private int proformatCode;
+    @Value("${etat.proforma.code}")
+    private int proformaCode;
+
     @Value("${etat.reelle.code}")
     private int reelleCode;
 
@@ -34,4 +35,21 @@ public class CclProperty {
     @Value("${facture.remise}")
     private double factureRemise;
 
+
+    @Value("${frequence.default.id}")
+    private String frequenceDefaultId;
+
+
+    @Value("${frequence.jour.id}")
+    private String frequenceJourId;
+
+
+    @Value("${frequence.heure.id}")
+    private String frequenceHeureId;
+
+    @Value("${frequence.mois.id}")
+    private String frequenceMoisId;
+
+    @Value("${frequence.nuit.id}")
+    private String frequenceNuitId;
 }

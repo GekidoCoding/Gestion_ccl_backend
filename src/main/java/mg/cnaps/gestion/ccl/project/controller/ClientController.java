@@ -22,19 +22,23 @@ public class ClientController extends GenericController<Client , String ,ClientS
 
     @GetMapping("/search/criteria")
     public Page<Client> findByCriteria(
-            @RequestParam int page,
-            @RequestParam int pageSize,
-            @RequestParam(required = false) String nom,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String cin,
-            @RequestParam(required = false) String fonction,
-            @RequestParam(required = false) String typeClientId,
-            @RequestParam(required = false) List<String> infraIds // <--- Liste des ID infrastructure
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "pageSize") int pageSize,
+            @RequestParam(value = "nom", required = false) String nom,
+            @RequestParam(value = "email",required = false) String email,
+            @RequestParam(value = "cin",required = false) String cin,
+            @RequestParam(value = "contacts",required = false) String contacts,
+            @RequestParam(value = "fonction",required = false) String fonction,
+            @RequestParam(value = "typeClientId",required = false) String typeClientId,
+            @RequestParam(value = "infraIds",required = false) List<String> infraIds
     ) {
+
+
         Client criteria = new Client();
         criteria.setNom(nom);
         criteria.setEmail(email);
         criteria.setCin(cin);
+        criteria.setContacts(contacts);
         criteria.setFonction(fonction);
 
         if (typeClientId != null && !typeClientId.isEmpty()) {
@@ -53,13 +57,18 @@ public class ClientController extends GenericController<Client , String ,ClientS
                     })
                     .collect(Collectors.toList());
         }
-
+        System.out.println("vao tonga :"+criteria);
         return service.findByCriteriaPaginated(page, pageSize, criteria, infrastructures);
     }
 
     @GetMapping("/total/{clientId}")
     public ResponseEntity<Integer> getTotal(@PathVariable("clientId") String clientId) {
         return ResponseEntity.ok( service.getTotalPersonnes(clientId));
+    }
+
+    @GetMapping("/totalMouvement/{clientId}")
+    public ResponseEntity<Integer> getTotalMouvements(@PathVariable("clientId") String clientId) {
+        return ResponseEntity.ok( service.getTotalMouvements(clientId));
     }
 
 

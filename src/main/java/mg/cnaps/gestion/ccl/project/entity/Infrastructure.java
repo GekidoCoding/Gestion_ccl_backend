@@ -1,13 +1,19 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_INFRASTRUCTURE")
 public class Infrastructure {
@@ -32,12 +38,10 @@ public class Infrastructure {
     @Column(name = "CAPACITE")
     private Long capacite;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "ID_LOCALISATION", nullable = false)
     private Localisation localisation;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "ID_MODELE_INFRA", nullable = false)
     private ModeleInfra modeleInfra;
@@ -46,12 +50,12 @@ public class Infrastructure {
     @Column(name = "ELEMENTS")
     private String elements;
 
-    @Column(name = "TARIF")
-    private Double prix;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "ID_ETAT", nullable = false)
+    @JoinColumn(name = "ID_ETAT" )
     private Etat etat;
+
+    @OneToMany(mappedBy = "infrastructure" ,  orphanRemoval = true)
+    @JsonManagedReference
+    private List<InfraTarif> infraTarifs;
 
 }

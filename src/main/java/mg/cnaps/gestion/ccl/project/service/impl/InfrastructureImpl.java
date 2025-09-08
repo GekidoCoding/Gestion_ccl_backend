@@ -4,10 +4,7 @@ import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericService
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.exception.EtatNotFoundException;
-import mg.cnaps.gestion.ccl.project.repository.EtatRepo;
-import mg.cnaps.gestion.ccl.project.repository.HistoriqueInfraRepo;
-import mg.cnaps.gestion.ccl.project.repository.InfrastructureRepo;
-import mg.cnaps.gestion.ccl.project.repository.MouvementRepo;
+import mg.cnaps.gestion.ccl.project.repository.*;
 import mg.cnaps.gestion.ccl.project.service.InfrastructureService;
 import mg.cnaps.gestion.ccl.project.util.CclProperty;
 import org.springframework.data.domain.Page;
@@ -29,12 +26,14 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
     private final HistoriqueInfraRepo historiqueInfraRepo;
     private final MouvementRepo mouvementRepo;
     private final CclPropertyService cclPropertyService;
-    public InfrastructureImpl(InfrastructureRepo repo, EtatRepo etatRepo, HistoriqueInfraRepo historiqueInfraRepo, MouvementRepo mouvementRepo, CclPropertyService cclPropertyService) {
+    private  final InfraTarifRepo infraTarifRepo;
+    public InfrastructureImpl(InfrastructureRepo repo, EtatRepo etatRepo, HistoriqueInfraRepo historiqueInfraRepo, MouvementRepo mouvementRepo, CclPropertyService cclPropertyService, InfraTarifRepo infraTarifRepo) {
         super(repo);
         this.etatRepo = etatRepo;
         this.historiqueInfraRepo = historiqueInfraRepo;
         this.mouvementRepo = mouvementRepo;
         this.cclPropertyService = cclPropertyService;
+        this.infraTarifRepo = infraTarifRepo;
     }
 
     @Override
@@ -56,45 +55,64 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
         return new PageImpl<>(filteredContent, pageable, filteredContent.size());
     }
 
-
     @Override
-    public Infrastructure update (Infrastructure entity , String id ){
-        if(!repository.existsById(id)){
-            throw new RuntimeException("Not Found ID ");
-        }
+    public Infrastructure save(Infrastructure entity) {
+        List<InfraTarif> tarifs = entity.getInfraTarifs();
 
-        entity= repository.save(entity);
-        //        Gestionnaire gestionnaire = new Gestionnaire();
-        HistoriqueInfra historiqueInfra = new HistoriqueInfra();
-//        historiqueInfra.setGestionnaire(gestionnaire);
-        if (entity.getEtat() == null  || entity.getEtat().getId() == null) {
+        if (entity.getEtat() == null || entity.getEtat().getId() == null) {
             Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
-            System.out.println("etat Defaut :"+ etatDefaut );
             entity.setEtat(etatDefaut);
         }
 
-        historiqueInfra.setInfrastructure(entity);
+        Infrastructure savedInfra = repository.save(entity);
+
+        if (tarifs != null) {
+            for (InfraTarif tarif : tarifs) {
+                tarif.setInfrastructure(savedInfra);
+                infraTarifRepo.save(tarif);
+            }
+        }
+
+        HistoriqueInfra historiqueInfra = new HistoriqueInfra();
+        historiqueInfra.setInfrastructure(savedInfra);
         historiqueInfra.setObservation("");
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
         historiqueInfraRepo.save(historiqueInfra);
-        return entity;
+
+        return savedInfra;
     }
 
     @Override
-    public Infrastructure save(Infrastructure entity){
-        entity= repository.save(entity);
-        HistoriqueInfra historiqueInfra = new HistoriqueInfra();
-        if (entity.getEtat() == null  || entity.getEtat().getId() == null) {
+    public Infrastructure update(Infrastructure entity, String id) {
+        List<InfraTarif> tarifs = entity.getInfraTarifs();
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Not Found ID");
+        }
+
+        if (entity.getEtat() == null || entity.getEtat().getId() == null) {
             Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
-            System.out.println("etat Defaut :"+ etatDefaut );
             entity.setEtat(etatDefaut);
         }
-        historiqueInfra.setInfrastructure(entity);
+
+        entity.setId(id); // s'assurer que l'id est correct
+        Infrastructure updatedInfra = repository.save(entity);
+
+        if (tarifs != null) {
+            for (InfraTarif tarif : tarifs) {
+                tarif.setInfrastructure(updatedInfra);
+                infraTarifRepo.save(tarif);
+            }
+        }
+
+        HistoriqueInfra historiqueInfra = new HistoriqueInfra();
+        historiqueInfra.setInfrastructure(updatedInfra);
         historiqueInfra.setObservation("");
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
         historiqueInfraRepo.save(historiqueInfra);
-        return entity;
+
+        return updatedInfra;
     }
+
 
     @Override
     public void delete(String id)throws Exception {
@@ -186,7 +204,7 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
 
     private boolean isNotOccupiedDuring(Infrastructure infra, Timestamp debut, Timestamp fin) {
         if (debut != null && fin != null) {
-            List<Mouvement> mouvements = mouvementRepo.getMouvementByInfrastructure_Id(infra.getId());
+            List<Mouvement> mouvements = mouvementRepo.getMouvementByInfrastructureId(infra.getId());
             String occupationId = cclPropertyService.getOccupationId();
 
             for (Mouvement mvt : mouvements) {

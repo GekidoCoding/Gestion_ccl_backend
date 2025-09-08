@@ -30,6 +30,7 @@ public class MouvementController extends GenericController<Mouvement , String ,M
     public ResponseEntity<List<Mouvement>> getByClientId(@PathVariable("id") String id){
         return ResponseEntity.ok(service.getMouvementByClient_Id(id)) ;
     }
+
     @GetMapping("/client/pagination/{id}")
     public ResponseEntity<Page<MouvementDto>> getByClientId(@PathVariable("id") String id , @RequestParam("page") int page, @RequestParam("pageSize") int pageSize){
         return ResponseEntity.ok(service.getMouvementByClient_Id(id , page  , pageSize)) ;
@@ -61,14 +62,12 @@ public class MouvementController extends GenericController<Mouvement , String ,M
         Infrastructure infra = new  Infrastructure();
         infra.setModeleInfra(modeleInfra);
 
-        criteria.setInfrastructure(infra);
 
         TypeMouvement typeMouvement = new TypeMouvement();
         typeMouvement.setId(typeMouvementId);
 
         criteria.setTypeMouvement(typeMouvement);
 
-        criteria.getInfrastructure().getModeleInfra().getCatInfra().setId(catInfraId);
         criteria.getTypeMouvement().setId(typeMouvementId);
 
         Timestamp debutTs =(debut != null) ? Timestamp.valueOf(debut) : null;
@@ -76,7 +75,7 @@ public class MouvementController extends GenericController<Mouvement , String ,M
         criteria.setPeriodeDebut(debutTs);
         criteria.setPeriodeFin(finTs);
 
-        return ResponseEntity.ok(service.getAllCriteria(page , pageSize , criteria )) ;
+        return ResponseEntity.ok(service.getAllCriteria(page , pageSize , criteria , catInfraId )) ;
     }
 
     @GetMapping("/calendar")
@@ -84,8 +83,20 @@ public class MouvementController extends GenericController<Mouvement , String ,M
         return ResponseEntity.ok( service.getMouvementCalendarDto());
     }
     @GetMapping("/calendar/{infrastructureId}")
-    public ResponseEntity<List<MouvementCalendarDto>> getMouvementCalendarDto(@PathVariable("infrastructureId") String infratructureId){
+    public ResponseEntity<List<MouvementCalendarDto>> getMouvementCalendarDto(
+            @PathVariable("infrastructureId") String infratructureId
+
+    ){
         return ResponseEntity.ok( service.getMouvementCalendarDtoByInfratructureId(infratructureId)) ;
+    }
+    @GetMapping("/calendar/criteria")
+    public ResponseEntity<List<MouvementCalendarDto>> getMouvementCalendarDtoCriteria(
+            @RequestParam(value = "infrastructureId" ,required = false) String infratructureId ,
+            @RequestParam(value = "modelesIds" , required = false) String[] modeles
+
+    ){
+//        System.out.println("infrastructureId:"+infratructureId +" modeles:"+modeles[0]);
+        return ResponseEntity.ok( service.getMouvementCalendarDtoByCriteria(infratructureId , modeles)) ;
     }
 
     @PutMapping("/accorder/{id}")
@@ -96,11 +107,14 @@ public class MouvementController extends GenericController<Mouvement , String ,M
     public ResponseEntity<Mouvement> classerMouvement(@PathVariable String id){
         return ResponseEntity.ok(service.classerMouvement(id) );
     }
-//    @PostMapping("/creates")
-//    public ResponseEntity<Page<MouvementDto>> creates(@RequestParam("infrastructures") Infrastructure[] infrastructures ,  @RequestBody Mouvement mouvement   ){
-//
-//        return ResponseEntity.ok(service.getMouvementByInfrastructure_Id(  )) ;
-//    }
+
+    @PostMapping("/verify/conflict")
+    public ResponseEntity<List<MouvementDto>> getConflict(@RequestBody Mouvement mouvement){
+        return ResponseEntity.ok(service.getListMouvementConflict(mouvement));
+    }
+
+
+
 
 
 }

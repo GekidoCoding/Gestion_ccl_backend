@@ -27,8 +27,9 @@ public class HistoriqueMvtController extends GenericController<HistoriqueMvt , S
                                                                                 @RequestParam(value="date1" , required = false) Date date1 ,
                                                                                 @RequestParam(value="date2" ,  required = false) Date date2,
                                                                                 @RequestParam(value="categorieInfraId" ,  required = false) String categorieInfraId,
-                                                                                @RequestParam(value="typeMouvementId" ,  required = false) String typeMouvementId
+                                                                                @RequestParam(value="typeMouvementId" ,  required = false) String typeMouvementId,
+                                                                                @RequestParam(value = "modelesIds" , required = false) String[] modelesIds
     ){
-        return ResponseEntity.ok(service.findAllCriteria(date1 ,date2 , year , categorieInfraId , typeMouvementId)) ;
+        return ResponseEntity.ok(service.findAllCriteria(date1 ,date2 , year , categorieInfraId , typeMouvementId , modelesIds)) ;
     }
 }

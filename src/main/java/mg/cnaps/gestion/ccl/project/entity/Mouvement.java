@@ -1,13 +1,20 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
 import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-@Data
+import java.util.List;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_MOUVEMENT")
 public class Mouvement {
@@ -29,10 +36,6 @@ public class Mouvement {
     @JoinColumn(name = "ID_CLIENT")
     private Client client;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ID_INFRASTRUCTURE")
-    private Infrastructure infrastructure;
-
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "PERIODE_DEBUT")
     private Timestamp periodeDebut;
@@ -45,10 +48,11 @@ public class Mouvement {
     @Column(name = "DH_MOUVEMENT")
     private Timestamp dhMouvement;
 
-
     @Column(name = "NOMBRE")
     private Integer nombre ;
 
-
+    @OneToMany(mappedBy = "mouvement", orphanRemoval = true)
+    @JsonManagedReference
+    private List<MouvementInfra> mouvementInfras;
 
 }

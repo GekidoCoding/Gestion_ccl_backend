@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface FactureService extends GenericService<Facture, String> {
      List<Facture> getFacturesByMouvement_Id(String mouvementId);
+     Facture getDefaultFactureProformaByMouvement_Id(String mouvementId);
+     Facture getFactureReelleByMouvementId(String mouvementId);
 }

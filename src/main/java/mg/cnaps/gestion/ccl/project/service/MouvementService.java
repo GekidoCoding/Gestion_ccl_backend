@@ -16,10 +16,11 @@ public interface MouvementService extends GenericService<Mouvement, String> {
     Page<MouvementDto> getMouvementByInfrastructure_Id (String  client_id , int page , int pageSize);
     Page<MouvementDto> getMouvementByClient_Id(String client_id, int page , int pageSize);
     Page<MouvementDto> getAllPaginated( int page , int pageSize);
-    Page<MouvementDto> getAllCriteria(int page , int pageSize , Mouvement criteria );
+    Page<MouvementDto> getAllCriteria(int page , int pageSize , Mouvement criteria , String catInfraId );
     List<MouvementCalendarDto> getMouvementCalendarDto();
     List<MouvementCalendarDto> getMouvementCalendarDtoByInfratructureId(String infratructureId);
     Mouvement accorderMouvement(String id);
-
+    List<MouvementDto> getListMouvementConflict(Mouvement mouvement);
     Mouvement classerMouvement(String id);
+    List<MouvementCalendarDto> getMouvementCalendarDtoByCriteria(String infraId , String[] modelesIds);
 }

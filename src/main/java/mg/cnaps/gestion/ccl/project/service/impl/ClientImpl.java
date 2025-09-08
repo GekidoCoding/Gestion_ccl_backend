@@ -2,10 +2,7 @@ package mg.cnaps.gestion.ccl.project.service.impl;
 
 import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
-import mg.cnaps.gestion.ccl.project.entity.Client;
-import mg.cnaps.gestion.ccl.project.entity.Etat;
-import mg.cnaps.gestion.ccl.project.entity.Infrastructure;
-import mg.cnaps.gestion.ccl.project.entity.Mouvement;
+import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.repository.ClientRepo;
 import mg.cnaps.gestion.ccl.project.repository.EtatRepo;
 import mg.cnaps.gestion.ccl.project.repository.MouvementRepo;
@@ -35,7 +32,6 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
     }
     @Override
     public Client save (Client entity ){
-        System.out.println(entity.toString());
         if (entity.getEtat() == null  || entity.getEtat().getId() == null) {
             Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
             System.out.println("etat Defaut :"+ etatDefaut );
@@ -58,14 +54,21 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
         List<Mouvement> mouvements = mouvementRepo.getMouvementByClient_Id(clientId);
 
         for (Mouvement mouvement : mouvements) {
-            Infrastructure infra = mouvement.getInfrastructure();
-            if (infra != null && infra.getId() != null && infraIds.contains(infra.getId())) {
-                return true;
+            if (mouvement.getMouvementInfras() != null) {
+                boolean match = mouvement.getMouvementInfras().stream()
+                        .map(MouvementInfra::getInfrastructure)
+                        .filter(Objects::nonNull)
+                        .map(Infrastructure::getId)
+                        .anyMatch(infraIds::contains);
+                if (match) {
+                    return true;
+                }
             }
         }
 
         return false;
     }
+
 
 
 
@@ -92,6 +95,14 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
                         matches &= (client.getCin() != null && client.getCin().contains(criteria.getCin()));
                     }
 
+                    if (criteria.getFonction() != null && !criteria.getFonction().isEmpty()) {
+                        matches &= (client.getFonction() != null && client.getFonction().contains(criteria.getFonction()));
+                    }
+                    System.out.println("client is:"+criteria);
+                    if (criteria.getContacts() != null && !criteria.getContacts().isEmpty()) {
+                        System.out.println("contacts : " + criteria.getContacts());
+                        matches &= (client.getContacts() != null && client.getContacts().contains(criteria.getContacts()));
+                    }
                     if (criteria.getFonction() != null && !criteria.getFonction().isEmpty()) {
                         matches &= (client.getFonction() != null && client.getFonction().contains(criteria.getFonction()));
                     }
@@ -122,5 +133,9 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
             totalPersonnes+=mouvement.getNombre();
         }
         return totalPersonnes;
+    }
+    @Override
+    public Integer getTotalMouvements(String clientId){
+        return mouvementRepo.getMouvementByClient_Id(clientId).size();
     }
 }

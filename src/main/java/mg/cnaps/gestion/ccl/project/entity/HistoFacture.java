@@ -2,6 +2,8 @@ package mg.cnaps.gestion.ccl.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
 import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
 
@@ -11,7 +13,9 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_HISTO_FACTURE")
 public class HistoFacture {

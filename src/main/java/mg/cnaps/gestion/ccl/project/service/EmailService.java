@@ -15,7 +15,7 @@ public class EmailService {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setFrom(new InternetAddress(" no-reply@cnaps.mg ", "CNaPS no-reply"));
                 helper.setTo(destinataire);
-                helper.setSubject("Envoi de facture proformat");
+                helper.setSubject("Envoi de facture proforma");
                 helper.setText(messageText);
                 emailSender.send(message);
             } catch (Exception e) {
