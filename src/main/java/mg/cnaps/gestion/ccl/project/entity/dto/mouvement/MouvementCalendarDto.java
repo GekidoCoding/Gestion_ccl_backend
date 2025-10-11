@@ -19,6 +19,25 @@ public class MouvementCalendarDto {
     private String periodeDebut;
     private String periodeFin;
 
+    public MouvementCalendarDto(Mouvement m ,  Infrastructure infrastructure) {
+        this.setId(m.getId());
+        this.setInfrastructure(infrastructure);
+
+        Client client = new Client();
+        String nom = m.getClient() != null ? m.getClient().getDesignationClient() : null;
+        client.setDesignationClient(nom );
+
+
+        this.setClient(client);
+
+        this.setPeriodeDebut(TimestampUtil.formatTimestampWithT(m.getPeriodeDebut()));
+        this.setPeriodeFin(TimestampUtil.formatTimestampWithT(m.getPeriodeFin()));
+
+        TypeMouvement typeMouvement = new TypeMouvement();
+        typeMouvement.setNom(m.getTypeMouvement() != null ? m.getTypeMouvement().getNom() : "N/A");
+        this.setTypeMouvement(typeMouvement);
+    }
+
     public MouvementCalendarDto(Mouvement m) {
         this.setId(m.getId());
 

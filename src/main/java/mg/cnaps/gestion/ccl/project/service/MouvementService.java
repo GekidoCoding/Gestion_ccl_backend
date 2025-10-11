@@ -23,7 +23,7 @@ public interface MouvementService extends GenericService<Mouvement, String> {
     List<MouvementCalendarDto> getMouvementCalendarDto();
     List<MouvementCalendarDto> getMouvementCalendarDtoByInfratructureId(String infratructureId);
     Mouvement accorderMouvement(String id);
-
+    void annuler(String id);
     Mouvement classerMouvement(String id, String matricule);
 
     List<MouvementDto> getListMouvementConflict(Mouvement mouvement);

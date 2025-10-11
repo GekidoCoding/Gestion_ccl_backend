@@ -119,6 +119,22 @@ public class MouvementController extends GenericController<Mouvement , String ,M
     public ResponseEntity<List<MouvementCalendarDto>> getMouvementCalendarDto(){
         return ResponseEntity.ok( service.getMouvementCalendarDto());
     }
+
+    @DeleteMapping("/annuler/{mouvementId}")
+    public ResponseEntity<?> annuler(@PathVariable("mouvementId") String mouvementId)  {
+        try{
+            getService().annuler(mouvementId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+
+    }
+
     @GetMapping("/calendar/{infrastructureId}")
     public ResponseEntity<List<MouvementCalendarDto>> getMouvementCalendarDto(
             @PathVariable("infrastructureId") String infratructureId

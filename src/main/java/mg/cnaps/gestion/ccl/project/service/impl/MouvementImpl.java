@@ -7,8 +7,10 @@ import mg.cnaps.gestion.ccl.project.entity.dto.mouvement.MouvementCalendarDto;
 import mg.cnaps.gestion.ccl.project.entity.dto.mouvement.MouvementDto;
 import mg.cnaps.gestion.ccl.project.exception.UnauthorizedException;
 import mg.cnaps.gestion.ccl.project.exception.UnauthorizedUpdateException;
+import mg.cnaps.gestion.ccl.project.repository.EtatRepo;
 import mg.cnaps.gestion.ccl.project.repository.HistoriqueMvtRepo;
 import mg.cnaps.gestion.ccl.project.repository.MouvementRepo;
+import mg.cnaps.gestion.ccl.project.service.EtatService;
 import mg.cnaps.gestion.ccl.project.service.MouvementService;
 import mg.cnaps.gestion.ccl.project.service.TypeMouvementService;
 import mg.cnaps.gestion.ccl.project.util.GestionnaireUtil;
@@ -32,17 +34,34 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
     private final CclPropertyService cclPropertyService;
     private final TypeMouvementService typeMouvementService;
     private final MouvementUtil mouvementUtil;
+    private final EtatRepo etatRepo;
     private final GestionnaireUtil gestionnaireUtil;
     public MouvementImpl(MouvementRepo repo, MouvementRepo mouvementRepo, HistoriqueMvtRepo historiqueRepo,
                          CclPropertyService cclPropertyService, TypeMouvementService typeMouvementService,
-                         MouvementUtil mouvementUtil, GestionnaireUtil gestionnaireUtil) {
+                         MouvementUtil mouvementUtil, EtatRepo etatRepo, GestionnaireUtil gestionnaireUtil) {
         super(repo);
         this.mouvementRepo = mouvementRepo;
         this.historiqueRepo = historiqueRepo;
         this.cclPropertyService = cclPropertyService;
         this.typeMouvementService = typeMouvementService;
         this.mouvementUtil = mouvementUtil;
+        this.etatRepo = etatRepo;
         this.gestionnaireUtil = gestionnaireUtil;
+    }
+
+    @Override
+    public List<Mouvement> findAll() {
+        try{
+            Etat etatInactif = etatRepo.getEtatByCode(cclPropertyService.getInactifCode());
+            return repository.findAll().stream()
+                    .sorted(Comparator.comparing(Mouvement::getDhMouvement).reversed())
+                    .filter(m -> !m.getEtat().getId().equals(etatInactif.getId()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -96,6 +115,7 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
             entity.setDhMouvement(Timestamp.valueOf(LocalDateTime.now()));
 
             List<MouvementInfra> mouvementInfras = entity.getMouvementInfras();
+            entity.setEtat(this.etatRepo.getEtatByCode(cclPropertyService.getActifCode()));
             entity = repository.save(entity);
 
             mouvementUtil.sauvegarderInfrastructures(mouvementInfras);
@@ -163,20 +183,20 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
 
     @Override
     public List<MouvementCalendarDto> getMouvementCalendarDto() {
-        return mouvementRepo.findAll().stream()
-                .filter(mouvementUtil::isInfrastructureActive)
-                .filter(mouvement -> {
-                    String id = mouvement.getTypeMouvement().getId();
-                    return cclPropertyService.getOccupationId().equals(id) || cclPropertyService.getReservationId().equals(id);
-                })
-                .map(MouvementCalendarDto::new)
-                .collect(Collectors.toList());
+        List<Mouvement> mouvements= this.getListReservationOccupation();
+        List<MouvementCalendarDto> mvtCalendars = new ArrayList<>();
+        for (Mouvement mouvement: mouvements) {
+            for (MouvementInfra mvtInfra : mouvement.getMouvementInfras()) {
+                mvtCalendars.add(new MouvementCalendarDto(mouvement , mvtInfra.getInfrastructure() ));
+            }
+        }
+        return mvtCalendars;
     }
 
     @Override
     public List<MouvementCalendarDto> getMouvementCalendarDtoByInfratructureId(String infraId) {
 
-        return mouvementRepo.findAll().stream()
+        return this.findAll().stream()
                 .filter(mouvementUtil::isInfrastructureActive)
                 .filter(mouvement -> {
                     boolean infraBool = (infraId == null || mouvementUtil.ifContainsInfra(mouvement, infraId));
@@ -205,7 +225,7 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
     @Override
     public Page<MouvementDto> getAllPaginated(int page, int pageSize) {
         // Récupérer tous les mouvements triés
-        List<Mouvement> allMouvements = mouvementRepo.findAll(Sort.by(Sort.Direction.DESC, "dhMouvement"));
+        List<Mouvement> allMouvements = this.findAll();
 
         // Filtrer ceux dont l'infrastructure est active et mapper en DTO
         List<MouvementDto> filtered = allMouvements.stream()
@@ -223,7 +243,7 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
     public Page<MouvementDto> getAllCriteria( int page, int pageSize, Mouvement criteria, String catInfraId) {
         try{
             // Récupérer tous les mouvements filtrés par infrastructure active
-            List<Mouvement> allMouvements = mouvementRepo.findAll(Sort.by(Sort.Direction.DESC, "dhMouvement"));
+            List<Mouvement> allMouvements =this.findAll();
 
             List<MouvementDto> filtered = allMouvements.stream()
                     .filter(mouvementUtil::isInfrastructureActive)
@@ -264,6 +284,13 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
     }
 
     @Override
+    public void annuler(String id) {
+        Mouvement mouvement = this.findById(id);
+        mouvement.setEtat(etatRepo.getEtatByCode(cclPropertyService.getInactifCode()));
+        repository.save(mouvement);
+    }
+
+    @Override
     public Mouvement classerMouvement(String id, String matricule) {
         try{
             Mouvement mouvement = this.mouvementRepo.findById(id).orElse(null);
@@ -285,6 +312,7 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
     public List<Mouvement> getListReservationOccupation() {
         List<TypeMouvement> typeMouvements = this.typeMouvementService.getTypeMouvementAddingMouvement();
         return this.findAll().stream()
+                .filter(mouvementUtil::isInfrastructureActive)
                 .filter(mouvement -> typeMouvements.contains(mouvement.getTypeMouvement()))
                 .collect(Collectors.toList());
     }
@@ -328,11 +356,6 @@ public class MouvementImpl extends GenericServiceImpl<Mouvement, String, Mouveme
 
         return new MouvementDto().toMouvementDtos(mouvementsEnConflit);
     }
-
-
-
-
-
 
     @Override
     public List<Mouvement> getOccupationNotPayedInDelai() {

@@ -4,4 +4,6 @@ import mg.cnaps.gestion.ccl.framework.jpa.core.service.GenericService;
 import mg.cnaps.gestion.ccl.project.entity.ModeleInfra;
 
 
-public interface ModeleInfraService extends GenericService<ModeleInfra, String> {}
+public interface ModeleInfraService extends GenericService<ModeleInfra, String> {
+    String[] getColorExist();
+}
