@@ -1,16 +1,18 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
-import lombok.Data;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import lombok.Getter;
+import lombok.Setter;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_FACTURE")
 public class Facture {
@@ -52,10 +54,31 @@ public class Facture {
     @Column(name = "REMISE")
     private Double remise;
 
-    @Column(name = "ACOMPTE_VERSE")
-    private Double acompteVerse;
+    @Column(name = "TOTAL_DU")
+    private Double totalDu;
+
+    public String getRefFacture() {
+        String year = String.valueOf(java.time.Year.now().getValue());
+
+        String factureId = (this.id != null) ? this.id.replace("FAC-", "") : "";
+
+        String clientId = "";
+        if (this.mouvement != null && this.mouvement.getClient() != null) {
+            String rawClientId = this.mouvement.getClient().getId();
+            if (rawClientId != null) {
+                clientId = rawClientId.replace("CLT-", "");
+            }
+        }
+
+        return year + "-" + factureId + "-" + clientId;
+    }
+
 
     public String getDhCreation() {
       return TimestampUtil.formatTimestamp(dhCreation);
+    }
+
+    public String getDhCreationNoHours() {
+        return TimestampUtil.formatTimestampNoHours(dhCreation);
     }
 }

@@ -1,18 +1,16 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import lombok.Getter;
+import lombok.Setter;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_HISTORIQUE_MVT")
 public class HistoriqueMvt {

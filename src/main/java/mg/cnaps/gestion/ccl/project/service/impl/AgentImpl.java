@@ -1,6 +1,6 @@
 package mg.cnaps.gestion.ccl.project.service.impl;
 
-import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
+import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.entity.existant.Agent;
 import mg.cnaps.gestion.ccl.project.repository.AgentRepo;
 import mg.cnaps.gestion.ccl.project.service.AgentService;
@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AgentImpl extends GenericServiceImpl<Agent, String , AgentRepo> implements AgentService {
@@ -21,17 +22,37 @@ public class AgentImpl extends GenericServiceImpl<Agent, String , AgentRepo> imp
     }
 
     @Override
-    public List<Agent> searchByCriteria(Agent criteria){
-        return repository.searchByCriteria(
-                criteria.getMatricule() != null && !criteria.getMatricule().isEmpty() ? criteria.getMatricule() : null,
-                criteria.getNom() != null && !criteria.getNom().isEmpty() ? criteria.getNom() : null,
-                criteria.getPrenoms() != null && !criteria.getPrenoms().isEmpty() ? criteria.getPrenoms() : null,
-                criteria.getMail() != null && !criteria.getMail().isEmpty() ? criteria.getMail() : null,
-                criteria.getCodeService() != null && !criteria.getCodeService().isEmpty() ? criteria.getCodeService() : null,
-                criteria.getCodeDirection() != null && !criteria.getCodeDirection().isEmpty() ? criteria.getCodeDirection() : null
-        );
+    public List<Agent> searchByCriteria(Agent criteria) {
+        List<Agent> allAgents = repository.findAll(); // Récupère tous les agents
 
+        return allAgents.stream()
+                .filter(a -> isEmpty(criteria.getMatricule()) ||
+                        containsIgnoreCase(a.getMatricule(), criteria.getMatricule()))
+                .filter(a -> isEmpty(criteria.getNom()) ||
+                        containsIgnoreCase(a.getNom(), criteria.getNom()))
+                .filter(a -> isEmpty(criteria.getPrenoms()) ||
+                        containsIgnoreCase(a.getPrenoms(), criteria.getPrenoms()))
+                .filter(a -> isEmpty(criteria.getMail()) ||
+                        containsIgnoreCase(a.getMail(), criteria.getMail()))
+                .filter(a -> isEmpty(criteria.getCodeService()) ||
+                        equalsIgnoreCase(a.getCodeService(), criteria.getCodeService()))
+                .filter(a -> isEmpty(criteria.getCodeDirection()) ||
+                        equalsIgnoreCase(a.getCodeDirection(), criteria.getCodeDirection()))
+                .collect(Collectors.toList());
     }
+
+    private boolean isEmpty(String value) {
+        return value == null || value.trim().isEmpty();
+    }
+
+    private boolean containsIgnoreCase(String source, String value) {
+        return source != null && source.toLowerCase().contains(value.toLowerCase());
+    }
+
+    private boolean equalsIgnoreCase(String source, String value) {
+        return source != null && source.equalsIgnoreCase(value);
+    }
+
 
     @Override
     public List<Agent> findAllNotGestionnaire() {

@@ -1,16 +1,18 @@
 package mg.cnaps.gestion.ccl.project.entity.dto.mouvement;
 
 import lombok.Data;
-import mg.cnaps.gestion.ccl.project.entity.Client;
-import mg.cnaps.gestion.ccl.project.entity.Infrastructure;
-import mg.cnaps.gestion.ccl.project.entity.Mouvement;
-import mg.cnaps.gestion.ccl.project.entity.TypeMouvement;
+import lombok.Getter;
+import lombok.Setter;
+import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+
+@Getter
+@Setter
 public class MouvementDto {
 
     private String id;
@@ -21,9 +23,10 @@ public class MouvementDto {
 
     private Infrastructure infrastructure;
 
-//    private String periodeDebut;
-//
-//    private String periodeFin;
+    private List<MouvementInfra> mouvementInfras;
+    private String periodeDebut;
+
+    private String periodeFin;
 
     private String dhMouvement;
 
@@ -33,32 +36,24 @@ public class MouvementDto {
         this.dhMouvement = TimestampUtil.formatTimestamp(m.getDhMouvement());
         this.id=m.getId();
         this.client = m.getClient();
-        this.infrastructure = m.getInfrastructure();
-
+        this.mouvementInfras=m.getMouvementInfras();
+        this.periodeDebut=TimestampUtil.formatTimestamp(m.getPeriodeDebut());
+        this.periodeFin=TimestampUtil.formatTimestamp(m.getPeriodeFin());
     }
 
     public MouvementDto() {
     }
 
-    public  MouvementDto toMouvementDto(Mouvement mouvement){
-        MouvementDto mouvementDto = new MouvementDto();
-        mouvementDto.setId(mouvement.getId());
-        mouvementDto.setTypeMouvement(mouvement.getTypeMouvement());
-        mouvementDto.setClient(mouvement.getClient());
-        mouvementDto.setInfrastructure(mouvement.getInfrastructure());
-//        mouvementDto.setDhMouvement(TimestampUtil.formatTimestamp(mouvement.getDhMouvement()));
-        return mouvementDto;
-    }
-    public  List<MouvementDto> toMouvementDto(List<Mouvement> mouvements){
+
+    public  List<MouvementDto> toMouvementDtos(List<Mouvement> mouvements){
         List<MouvementDto> mouvementDtos = new ArrayList<>();
         for (Mouvement mouvement : mouvements){
-            mouvementDtos.add(toMouvementDto(mouvement));
+            mouvementDtos.add(new MouvementDto(mouvement) );
         }
         return mouvementDtos;
     }
 
 
 
-//    private Integer nombre ;
 
 }

@@ -10,11 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cnaps/gestion/ccl/agent")
+@RequestMapping("/agent")
 public class AgentController {
     private final AgentService service;
 
@@ -37,14 +38,21 @@ public class AgentController {
             @RequestParam(required = false) String codeService,
             @RequestParam(required = false) String codeDirection
     ) {
-        Agent criteria = new Agent();
-        criteria.setMatricule(matricule);
-        criteria.setNom(nom);
-        criteria.setPrenoms(prenoms);
-        criteria.setMail(mail);
-        criteria.setCodeService(codeService);
-        criteria.setCodeDirection(codeDirection);
-        return service.searchByCriteria(criteria);
+        try{
+            Agent criteria = new Agent();
+            criteria.setMatricule(matricule);
+            criteria.setNom(nom);
+            criteria.setPrenoms(prenoms);
+            criteria.setMail(mail);
+            criteria.setCodeService(codeService);
+            criteria.setCodeDirection(codeDirection);
+            return service.searchByCriteria(criteria);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     @GetMapping("/paginated")

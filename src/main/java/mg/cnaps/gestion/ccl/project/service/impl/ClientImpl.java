@@ -1,15 +1,14 @@
 package mg.cnaps.gestion.ccl.project.service.impl;
 
-import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
+import mg.cnaps.gestion.ccl.framework.check.util.ObjectComparator;
+import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
-import mg.cnaps.gestion.ccl.project.entity.Client;
-import mg.cnaps.gestion.ccl.project.entity.Etat;
-import mg.cnaps.gestion.ccl.project.entity.Infrastructure;
-import mg.cnaps.gestion.ccl.project.entity.Mouvement;
+import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.repository.ClientRepo;
 import mg.cnaps.gestion.ccl.project.repository.EtatRepo;
 import mg.cnaps.gestion.ccl.project.repository.MouvementRepo;
 import mg.cnaps.gestion.ccl.project.service.ClientService;
+import mg.cnaps.gestion.ccl.project.util.PageUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,12 +30,28 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
         this.cclPropertyService = cclPropertyService;
         this.mouvementRepo = mouvementRepo;
     }
+
+    @Override
+    public List<Client> findAll() {
+        List<Client> clients = repository.findAll();
+        clients.sort(Comparator.comparing(Client::getDateInsert).reversed());
+        return clients;
+    }
+
+    public List<Client> checkSimilarity(Client client){
+        List<Client> clients = this.findAll()  ;
+        List<Client> infraSimilaire = new ArrayList<>();
+        for (Client infra : clients) {
+            if(ObjectComparator.isDegreeAtteint(infra , client)){
+                infraSimilaire.add(infra);
+            }
+        }
+        return infraSimilaire;
+    }
     @Override
     public Client save (Client entity ){
-        System.out.println(entity.toString());
-        if (entity.getEtat() == null ) {
+        if (entity.getEtat() == null  || entity.getEtat().getId() == null) {
             Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
-            System.out.println("etat Defaut :"+ etatDefaut );
             entity.setEtat(etatDefaut);
         }
         entity.setDateInsert( Timestamp.valueOf(LocalDateTime.now()));
@@ -58,9 +71,15 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
         List<Mouvement> mouvements = mouvementRepo.getMouvementByClient_Id(clientId);
 
         for (Mouvement mouvement : mouvements) {
-            Infrastructure infra = mouvement.getInfrastructure();
-            if (infra != null && infra.getId() != null && infraIds.contains(infra.getId())) {
-                return true;
+            if (mouvement.getMouvementInfras() != null) {
+                boolean match = mouvement.getMouvementInfras().stream()
+                        .map(MouvementInfra::getInfrastructure)
+                        .filter(Objects::nonNull)
+                        .map(Infrastructure::getId)
+                        .anyMatch(infraIds::contains);
+                if (match) {
+                    return true;
+                }
             }
         }
 
@@ -68,19 +87,16 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
     }
 
 
-
     @Override
     public Page<Client> findByCriteriaPaginated(int page, int pageSize, Client criteria, List<Infrastructure> infrastructures) {
-        Page<Client> clients = this.findPaginated(page, pageSize);
 
-        List<Client> filteredClients = clients.getContent().stream()
+        List<Client> allFiltered = this.findAll().stream()
+                .filter(Objects::nonNull)
                 .filter(client -> {
                     boolean matches = true;
 
-                    if (criteria.getNom() != null && !criteria.getNom().isEmpty()) {
-                        boolean nameMatch = (client.getNom() != null && client.getNom().contains(criteria.getNom()))
-                                || (client.getPrenom() != null && client.getPrenom().contains(criteria.getNom()))
-                                || (client.getRaisonSociale() != null && client.getRaisonSociale().contains(criteria.getNom()));
+                    if (criteria.getDesignationClient() != null && !criteria.getDesignationClient().isEmpty()) {
+                        boolean nameMatch = (client.getDesignationClient() != null && client.getDesignationClient().contains(criteria.getDesignationClient()));
                         matches &= nameMatch;
                     }
 
@@ -94,6 +110,10 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
 
                     if (criteria.getFonction() != null && !criteria.getFonction().isEmpty()) {
                         matches &= (client.getFonction() != null && client.getFonction().contains(criteria.getFonction()));
+                    }
+
+                    if (criteria.getContacts() != null && !criteria.getContacts().isEmpty()) {
+                        matches &= (client.getContacts() != null && client.getContacts().contains(criteria.getContacts()));
                     }
 
                     if (criteria.getTypeClient() != null && criteria.getTypeClient().getId() != null
@@ -110,8 +130,13 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
                 })
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(filteredClients, PageRequest.of(page, pageSize), filteredClients.size());
+        // Pagination
+        List<Client> paged = new PageUtil<Client>().paginateList(page, pageSize, allFiltered);
+
+        // Retourner la page avec totalElements correct
+        return new PageImpl<>(paged, PageRequest.of(page, pageSize), allFiltered.size());
     }
+
 
     @Override
     public Integer getTotalPersonnes(String clientId){
@@ -122,5 +147,18 @@ public class ClientImpl extends GenericServiceImpl<Client, String , ClientRepo> 
             totalPersonnes+=mouvement.getNombre();
         }
         return totalPersonnes;
+    }
+    @Override
+    public Integer getTotalMouvements(String clientId){
+        return mouvementRepo.getMouvementByClient_Id(clientId).size();
+    }
+    @Override
+    public Page<Client> findPaginated(int page, int pageSize) {
+        List<Client> allFiltered = this.findAll();
+
+        List<Client> paged = new PageUtil<Client>().paginateList(page, pageSize, allFiltered);
+
+        return new PageImpl<>(paged, PageRequest.of(page, pageSize), allFiltered.size());
+
     }
 }

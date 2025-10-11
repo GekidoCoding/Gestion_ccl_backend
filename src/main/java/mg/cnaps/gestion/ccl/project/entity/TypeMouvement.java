@@ -1,13 +1,16 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
 
-import lombok.Data;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import lombok.Getter;
+import lombok.Setter;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "CCL2_TYPE_MOUVEMENT")
 public class TypeMouvement {
@@ -24,5 +27,9 @@ public class TypeMouvement {
     @Size(max = 255)
     @Column(name = "NOM_TYPE_MVT")
     private String nom;
+
+    @Column(name = "NIVEAU_PROCESSUS")
+    private Integer niveauProcessus;
+
 
 }

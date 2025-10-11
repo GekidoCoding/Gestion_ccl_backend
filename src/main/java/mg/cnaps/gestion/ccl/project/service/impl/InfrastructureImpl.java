@@ -1,23 +1,23 @@
 package mg.cnaps.gestion.ccl.project.service.impl;
 
-import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
+import mg.cnaps.gestion.ccl.framework.check.util.ObjectComparator;
+import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.exception.EtatNotFoundException;
-import mg.cnaps.gestion.ccl.project.repository.EtatRepo;
-import mg.cnaps.gestion.ccl.project.repository.HistoriqueInfraRepo;
-import mg.cnaps.gestion.ccl.project.repository.InfrastructureRepo;
-import mg.cnaps.gestion.ccl.project.repository.MouvementRepo;
+import mg.cnaps.gestion.ccl.project.repository.*;
 import mg.cnaps.gestion.ccl.project.service.InfrastructureService;
 import mg.cnaps.gestion.ccl.project.util.CclProperty;
+import mg.cnaps.gestion.ccl.project.util.GestionnaireUtil;
+import mg.cnaps.gestion.ccl.project.util.PageUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -29,13 +29,18 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
     private final HistoriqueInfraRepo historiqueInfraRepo;
     private final MouvementRepo mouvementRepo;
     private final CclPropertyService cclPropertyService;
-    public InfrastructureImpl(InfrastructureRepo repo, EtatRepo etatRepo, HistoriqueInfraRepo historiqueInfraRepo, MouvementRepo mouvementRepo, CclPropertyService cclPropertyService) {
+    private  final InfraTarifRepo infraTarifRepo;
+    private final GestionnaireUtil gestionnaireUtil;
+    public InfrastructureImpl(InfrastructureRepo repo, EtatRepo etatRepo, HistoriqueInfraRepo historiqueInfraRepo, MouvementRepo mouvementRepo, CclPropertyService cclPropertyService, InfraTarifRepo infraTarifRepo, GestionnaireUtil gestionnaireUtil) {
         super(repo);
         this.etatRepo = etatRepo;
         this.historiqueInfraRepo = historiqueInfraRepo;
         this.mouvementRepo = mouvementRepo;
         this.cclPropertyService = cclPropertyService;
+        this.infraTarifRepo = infraTarifRepo;
+        this.gestionnaireUtil = gestionnaireUtil;
     }
+
 
     @Override
     public List<Infrastructure> findAll() {
@@ -46,48 +51,103 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public List<Infrastructure> checkSimilarity(Infrastructure infrastructure){
+        List<Infrastructure> infrastructures = this.findAll()  ;
+        List<Infrastructure> infraSimilaire = new ArrayList<>();
+        for (Infrastructure infra : infrastructures) {
+            if(ObjectComparator.isDegreeAtteint(infra , infrastructure)){
+                infraSimilaire.add(infra);
+            }
+        }
+        return infraSimilaire;
+    }
+
     @Override
     public Page<Infrastructure> findPaginated(int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<Infrastructure> pageContent = repository.findAll(pageable);
-        List<Infrastructure> filteredContent = pageContent.getContent().stream()
-                .filter(infra -> !infra.getEtat().getCode().equals(cclPropertyService.getInactifCode()))
-                .collect(Collectors.toList());
-        return new PageImpl<>(filteredContent, pageable, filteredContent.size());
+        List<Infrastructure> allFiltered = repository.findAll();
+
+       List<Infrastructure> paged = new PageUtil<Infrastructure>().paginateList(page, pageSize, allFiltered);
+
+        return new PageImpl<>(paged, PageRequest.of(page, pageSize), allFiltered.size());
+
     }
 
-
     @Override
-    public Infrastructure update (Infrastructure entity , String id ){
-        if(!repository.existsById(id)){
-            throw new RuntimeException("Not Found ID ");
+    public Infrastructure save(Infrastructure entity, String matricule) {
+        Gestionnaire gestionnaire = this.gestionnaireUtil.getGestionnaireHisto(matricule);
+        List<InfraTarif> tarifs = entity.getInfraTarifs();
+
+        if (entity.getEtat() == null || entity.getEtat().getId() == null) {
+            Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
+            entity.setEtat(etatDefaut);
         }
 
-        entity= repository.save(entity);
-        //        Gestionnaire gestionnaire = new Gestionnaire();
+        Infrastructure savedInfra = repository.save(entity);
+
+        if (tarifs != null) {
+            for (InfraTarif tarif : tarifs) {
+                tarif.setInfrastructure(savedInfra);
+                infraTarifRepo.save(tarif);
+            }
+        }
+
         HistoriqueInfra historiqueInfra = new HistoriqueInfra();
-//        historiqueInfra.setGestionnaire(gestionnaire);
-        historiqueInfra.setEtat(entity.getEtat());
-        historiqueInfra.setInfrastructure(entity);
+        historiqueInfra.setInfrastructure(savedInfra);
         historiqueInfra.setObservation("");
+
+        historiqueInfra.setGestionnaire(gestionnaire);
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
         historiqueInfraRepo.save(historiqueInfra);
-        return entity;
+
+        return savedInfra;
     }
 
+    private void deleteExistTarifs(InfraTarif tarif , List<InfraTarif> existings){
+        for (InfraTarif exist : existings) {
+            if(tarif.getFrequence().getId().equals(exist.getFrequence().getId())){
+                this.infraTarifRepo.delete(exist);
+            }
+        }
+    }
     @Override
-    public Infrastructure save(Infrastructure entity){
-        entity= repository.save(entity);
-        //        Gestionnaire gestionnaire = new Gestionnaire();
+    public Infrastructure update(Infrastructure entity, String id, String matricule) {
+        Gestionnaire gestionnaire = this.gestionnaireUtil.getGestionnaireHisto(matricule);
+        List<InfraTarif> tarifs = entity.getInfraTarifs();
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Not Found ID");
+        }
+
+        if (entity.getEtat() == null || entity.getEtat().getId() == null) {
+            Etat etatDefaut = etatRepo.getEtatByCode(cclPropertyService.getActifCode());
+            entity.setEtat(etatDefaut);
+        }
+
+        entity.setId(id); // s'assurer que l'id est correct
+        Infrastructure updatedInfra = repository.save(entity);
+        List<InfraTarif> infraTarifs =this.infraTarifRepo.getAllByInfrastructure_Id(updatedInfra.getId());
+        if (tarifs != null) {
+            for (InfraTarif tarif : tarifs) {
+                this.deleteExistTarifs(tarif ,infraTarifs);
+                tarif.setInfrastructure(updatedInfra);
+
+                infraTarifRepo.save(tarif);
+            }
+        }
+
         HistoriqueInfra historiqueInfra = new HistoriqueInfra();
-        //        historiqueInfra.setGestionnaire(gestionnaire);
-        historiqueInfra.setEtat(entity.getEtat());
-        historiqueInfra.setInfrastructure(entity);
+
+        historiqueInfra.setGestionnaire(gestionnaire);
+        historiqueInfra.setInfrastructure(updatedInfra);
         historiqueInfra.setObservation("");
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
         historiqueInfraRepo.save(historiqueInfra);
-        return entity;
+
+        return updatedInfra;
     }
+
+
 
     @Override
     public void delete(String id)throws Exception {
@@ -127,19 +187,25 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
                                                   CategorieInfra catInfra,
                                                   Timestamp debut,
                                                   Timestamp fin) {
-        Page<Infrastructure> infrastructures = this.findPaginated(page, pageSize);
+        try{
+            List<Infrastructure> allFiltered = this.findAll().stream()
+                    .filter(Objects::nonNull)
+                    .filter(infra -> matchCriteria(infra, criteria))
+                    .filter(infra -> matchModeleAndCategorie(infra, modeles, catInfra))
+                    .filter(infra -> matchLocalisations(infra, localisations))
+                    .filter(infra -> isNotOccupiedDuring(infra, debut, fin))
+                    .collect(Collectors.toList());
 
-        List<Infrastructure> filtered = infrastructures.getContent().stream()
-                .filter(Objects::nonNull)
-                .filter(infra -> matchCriteria(infra, criteria))
-                .filter(infra -> matchModeleAndCategorie(infra, modeles, catInfra))
-                .filter(infra -> matchLocalisations(infra, localisations))
-                .filter(infra -> isNotOccupiedDuring(infra, debut, fin))
-                .collect(Collectors.toList());
+            List<Infrastructure> paged = new PageUtil<Infrastructure>().paginateList(page, pageSize, allFiltered);
 
-        Pageable pageable = PageRequest.of(page, pageSize);
-        return new PageImpl<>(filtered, pageable, infrastructures.getTotalElements());
+            return new PageImpl<>(paged, PageRequest.of(page, pageSize), allFiltered.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
+
 
 
     private boolean matchCriteria(Infrastructure infra, Infrastructure criteria) {
@@ -179,7 +245,7 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
 
     private boolean isNotOccupiedDuring(Infrastructure infra, Timestamp debut, Timestamp fin) {
         if (debut != null && fin != null) {
-            List<Mouvement> mouvements = mouvementRepo.getMouvementByInfrastructure_Id(infra.getId());
+            List<Mouvement> mouvements = mouvementRepo.getMouvementByInfrastructureId(infra.getId());
             String occupationId = cclPropertyService.getOccupationId();
 
             for (Mouvement mvt : mouvements) {
@@ -200,6 +266,7 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
         }
         return true;
     }
+
     private boolean matchLocalisations(Infrastructure infra, Localisation[] localisations) {
         if (localisations != null && localisations.length > 0) {
             return Arrays.stream(localisations)
