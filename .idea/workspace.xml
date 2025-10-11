@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d80d64bd-4ebb-4420-8a66-703f2123f953" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="package-info" />
+        <option value="Exception" />
+        <option value="com.intellij.jpb.JpaEntity" />
+        <option value="Interface" />
+        <option value="AnnotationType" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2yi5cpcMpcTnhrC7MRKjTW3zPTB" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Doubleutil.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;Spring Boot.GestionCclApplication (1).executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.GestionCclApplication.executor&quot;: &quot;Run&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
+    &quot;database.data.extractors.current.id&quot;: &quot;SQL Inserts&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/stage/GESTION-CCL/backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;oracle&quot;
+    ]
+  }
+}</component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/mg/cnaps/gestion/ccl/project/security" />
+      <recent name="$PROJECT_DIR$/src/main/resources/reports" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/mg/cnaps/gestion/ccl" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/static" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.GestionCclApplication">
+    <configuration name="Doubleutil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mg.cnaps.gestion.ccl.project.util.Doubleutil" />
+      <module name="ccl" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="mg.cnaps.gestion.ccl.project.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GestionCclApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="ccl" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="mg.cnaps.gestion.ccl.GestionCclApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Doubleutil" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d80d64bd-4ebb-4420-8a66-703f2123f953" name="Changes" comment="" />
+      <created>1750304636114</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1750304636114</updated>
+      <workItem from="1750304637194" duration="12173000" />
+      <workItem from="1750331614046" duration="602000" />
+      <workItem from="1750335110867" duration="686000" />
+      <workItem from="1750338211463" duration="38000" />
+      <workItem from="1750344579051" duration="840000" />
+      <workItem from="1750345468805" duration="727000" />
+      <workItem from="1750346289068" duration="8364000" />
+      <workItem from="1750358571472" duration="2261000" />
+      <workItem from="1750378324311" duration="1624000" />
+      <workItem from="1750395670707" duration="6001000" />
+      <workItem from="1750432145605" duration="642000" />
+      <workItem from="1750484384976" duration="8329000" />
+      <workItem from="1750518020746" duration="2729000" />
+      <workItem from="1750522598645" duration="1842000" />
+      <workItem from="1750525032090" duration="861000" />
+      <workItem from="1750527885287" duration="7426000" />
+      <workItem from="1750585493840" duration="3492000" />
+      <workItem from="1750607361347" duration="2314000" />
+      <workItem from="1750615679982" duration="13270000" />
+      <workItem from="1750630987761" duration="459000" />
+      <workItem from="1750664556513" duration="5915000" />
+      <workItem from="1750679926381" duration="681000" />
+      <workItem from="1750687570022" duration="48000" />
+      <workItem from="1750703640846" duration="670000" />
+      <workItem from="1750741337553" duration="9109000" />
+      <workItem from="1750754475861" duration="898000" />
+      <workItem from="1750755471975" duration="5694000" />
+      <workItem from="1750827834871" duration="4471000" />
+      <workItem from="1751000238732" duration="2763000" />
+      <workItem from="1751023341002" duration="1421000" />
+      <workItem from="1751259760946" duration="7077000" />
+      <workItem from="1751269362285" duration="5103000" />
+      <workItem from="1751281473244" duration="1751000" />
+      <workItem from="1751348314121" duration="3089000" />
+      <workItem from="1751364009688" duration="2127000" />
+      <workItem from="1751387786143" duration="7000" />
+      <workItem from="1751387977335" duration="482000" />
+      <workItem from="1751388541260" duration="4836000" />
+      <workItem from="1751396804513" duration="966000" />
+      <workItem from="1751433244218" duration="10824000" />
+      <workItem from="1751445646193" duration="1695000" />
+      <workItem from="1751450067345" duration="885000" />
+      <workItem from="1751469539790" duration="1339000" />
+      <workItem from="1751519030302" duration="12344000" />
+      <workItem from="1751537078690" duration="5085000" />
+      <workItem from="1751547499566" duration="152000" />
+      <workItem from="1751606045802" duration="7231000" />
+      <workItem from="1751614359170" duration="4764000" />
+      <workItem from="1751623377026" duration="6074000" />
+      <workItem from="1751864186956" duration="11785000" />
+      <workItem from="1751954158225" duration="11291000" />
+      <workItem from="1751976678891" duration="1562000" />
+      <workItem from="1752026484050" duration="13301000" />
+      <workItem from="1752052227143" duration="4115000" />
+      <workItem from="1752073475167" duration="3894000" />
+      <workItem from="1752078794614" duration="143000" />
+      <workItem from="1752081748996" duration="451000" />
+      <workItem from="1752124239537" duration="4926000" />
+      <workItem from="1752137359728" duration="8133000" />
+      <workItem from="1752173310772" duration="1460000" />
+      <workItem from="1752216353180" duration="4087000" />
+      <workItem from="1752300219751" duration="286000" />
+      <workItem from="1752300578780" duration="5865000" />
+      <workItem from="1752316622935" duration="6197000" />
+      <workItem from="1752331763678" duration="7000" />
+      <workItem from="1752336320499" duration="614000" />
+      <workItem from="1752469579309" duration="815000" />
+      <workItem from="1752556409927" duration="4124000" />
+      <workItem from="1752592330478" duration="683000" />
+      <workItem from="1752642107555" duration="5408000" />
+      <workItem from="1752663678157" duration="4246000" />
+      <workItem from="1752718490579" duration="714000" />
+      <workItem from="1752729555485" duration="5192000" />
+      <workItem from="1752746043513" duration="37000" />
+      <workItem from="1752746218538" duration="7571000" />
+      <workItem from="1752814937212" duration="159000" />
+      <workItem from="1752815121560" duration="5804000" />
+      <workItem from="1752832871655" duration="6283000" />
+      <workItem from="1753074082033" duration="1386000" />
+      <workItem from="1753100073119" duration="1567000" />
+      <workItem from="1753160674398" duration="5513000" />
+      <workItem from="1753171260290" duration="87000" />
+      <workItem from="1753171734680" duration="6929000" />
+      <workItem from="1753247211719" duration="1529000" />
+      <workItem from="1753249860538" duration="5080000" />
+      <workItem from="1753274330716" duration="640000" />
+      <workItem from="1753419976528" duration="11665000" />
+      <workItem from="1753438675769" duration="7331000" />
+      <workItem from="1753614550723" duration="1433000" />
+      <workItem from="1753678656164" duration="19705000" />
+      <workItem from="1753765408501" duration="7248000" />
+      <workItem from="1753782994480" duration="3458000" />
+      <workItem from="1753938255289" duration="4669000" />
+      <workItem from="1753956727261" duration="8679000" />
+      <workItem from="1754025236699" duration="3797000" />
+      <workItem from="1754045800741" duration="12000" />
+      <workItem from="1754045958397" duration="2099000" />
+      <workItem from="1754287193754" duration="93000" />
+      <workItem from="1754287391403" duration="7998000" />
+      <workItem from="1754370220082" duration="210000" />
+      <workItem from="1754370532364" duration="15677000" />
+      <workItem from="1754456894608" duration="5949000" />
+      <workItem from="1754465375334" duration="282000" />
+      <workItem from="1754465800760" duration="581000" />
+      <workItem from="1754466683770" duration="10219000" />
+      <workItem from="1754544500518" duration="12398000" />
+      <workItem from="1754572412848" duration="177000" />
+      <workItem from="1754888823684" duration="1000" />
+      <workItem from="1754888851099" duration="2346000" />
+      <workItem from="1754901499467" duration="2450000" />
+      <workItem from="1754967515056" duration="152000" />
+      <workItem from="1755015034038" duration="692000" />
+      <workItem from="1755023650704" duration="5000" />
+      <workItem from="1755844417089" duration="5506000" />
+      <workItem from="1755859624577" duration="1220000" />
+      <workItem from="1756053702685" duration="265000" />
+      <workItem from="1756098616567" duration="19783000" />
+      <workItem from="1756185071586" duration="14395000" />
+      <workItem from="1756272709805" duration="7000" />
+      <workItem from="1756358342341" duration="6170000" />
+      <workItem from="1756378485931" duration="2703000" />
+      <workItem from="1756397545761" duration="1325000" />
+      <workItem from="1756431102305" duration="1804000" />
+      <workItem from="1756436418830" duration="973000" />
+      <workItem from="1756444234761" duration="6977000" />
+      <workItem from="1756453632623" duration="2683000" />
+      <workItem from="1756460537107" duration="971000" />
+      <workItem from="1756467261659" duration="3347000" />
+      <workItem from="1756651195844" duration="373000" />
+      <workItem from="1756656085647" duration="514000" />
+      <workItem from="1756658855781" duration="2249000" />
+      <workItem from="1756663327164" duration="2258000" />
+      <workItem from="1756667067071" duration="2725000" />
+      <workItem from="1756670154899" duration="2087000" />
+      <workItem from="1756703403309" duration="7399000" />
+      <workItem from="1756726188534" duration="4862000" />
+      <workItem from="1756739082671" duration="25000" />
+      <workItem from="1756739572120" duration="16000" />
+      <workItem from="1756739708005" duration="2377000" />
+      <workItem from="1756746255993" duration="2474000" />
+      <workItem from="1756792604630" duration="6563000" />
+      <workItem from="1756810560421" duration="5073000" />
+      <workItem from="1756817138421" duration="1269000" />
+      <workItem from="1756963455343" duration="3655000" />
+      <workItem from="1756968086317" duration="7771000" />
+      <workItem from="1756980738587" duration="8827000" />
+      <workItem from="1756994445934" duration="587000" />
+      <workItem from="1757050354545" duration="6231000" />
+      <workItem from="1757059955060" duration="1228000" />
+      <workItem from="1757066876324" duration="7117000" />
+      <workItem from="1757090914482" duration="805000" />
+      <workItem from="1757135383153" duration="8337000" />
+      <workItem from="1757148496179" duration="2216000" />
+      <workItem from="1757236384223" duration="704000" />
+      <workItem from="1757256913163" duration="433000" />
+      <workItem from="1757257419449" duration="5555000" />
+      <workItem from="1757306779246" duration="4515000" />
+      <workItem from="1757314764201" duration="3606000" />
+      <workItem from="1757326062476" duration="8022000" />
+      <workItem from="1757413032266" duration="155000" />
+      <workItem from="1757413205047" duration="278000" />
+      <workItem from="1757414330791" duration="4983000" />
+      <workItem from="1757485496095" duration="3436000" />
+      <workItem from="1757490538562" duration="4563000" />
+      <workItem from="1757498198963" duration="10630000" />
+      <workItem from="1757529291474" duration="1232000" />
+      <workItem from="1757530539035" duration="794000" />
+      <workItem from="1757531345925" duration="85000" />
+      <workItem from="1757566439551" duration="14725000" />
+      <workItem from="1757585169848" duration="6766000" />
+      <workItem from="1757595852778" duration="345000" />
+      <workItem from="1757610004240" duration="9183000" />
+      <workItem from="1757653634044" duration="10691000" />
+      <workItem from="1757671710448" duration="9098000" />
+      <workItem from="1757913040354" duration="10440000" />
+      <workItem from="1757931974792" duration="636000" />
+      <workItem from="1757933910686" duration="972000" />
+      <workItem from="1758105679560" duration="3867000" />
+      <workItem from="1758171125911" duration="10417000" />
+      <workItem from="1758182454684" duration="3877000" />
+      <workItem from="1758189299548" duration="10182000" />
+      <workItem from="1758211829535" duration="1941000" />
+      <workItem from="1758219448283" duration="1899000" />
+      <workItem from="1758258566791" duration="6289000" />
+      <workItem from="1758270015422" duration="9583000" />
+      <workItem from="1758282964636" duration="3973000" />
+      <workItem from="1758301595876" duration="394000" />
+      <workItem from="1758517892978" duration="10769000" />
+      <workItem from="1758603443566" duration="2225000" />
+      <workItem from="1758776327456" duration="2000" />
+      <workItem from="1758896407525" duration="21000" />
+      <workItem from="1758997733538" duration="1736000" />
+      <workItem from="1759040806566" duration="2414000" />
+      <workItem from="1759127250479" duration="692000" />
+      <workItem from="1759307962805" duration="664000" />
+      <workItem from="1759308956409" duration="253000" />
+      <workItem from="1759468384120" duration="6547000" />
+      <workItem from="1759558997010" duration="597000" />
+      <workItem from="1759727177930" duration="937000" />
+      <workItem from="1759741661329" duration="836000" />
+      <workItem from="1759761783426" duration="15997000" />
+      <workItem from="1759821751289" duration="663000" />
+      <workItem from="1759855644060" duration="2189000" />
+      <workItem from="1759865533563" duration="17747000" />
+      <workItem from="1759900911050" duration="12056000" />
+      <workItem from="1759939358659" duration="5556000" />
+      <workItem from="1759947858660" duration="5052000" />
+      <workItem from="1759986676837" duration="8345000" />
+      <workItem from="1760013201714" duration="682000" />
+      <workItem from="1760023613231" duration="3693000" />
+      <workItem from="1760030264494" duration="14458000" />
+      <workItem from="1760072855753" duration="12567000" />
+      <workItem from="1760123051515" duration="598000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
