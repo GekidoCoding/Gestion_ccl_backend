@@ -1,6 +1,6 @@
 package mg.cnaps.gestion.ccl.project.service.impl;
 
-import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
+import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.entity.Localisation;
 import mg.cnaps.gestion.ccl.project.repository.LocalisationRepo;
 import mg.cnaps.gestion.ccl.project.service.LocalisationService;

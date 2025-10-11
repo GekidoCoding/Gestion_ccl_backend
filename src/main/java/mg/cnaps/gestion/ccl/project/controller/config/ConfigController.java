@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cnaps/gestion/ccl/config")
+@RequestMapping("/config")
 public class ConfigController {
     private final CclPropertyService cclPropertyService;
 
@@ -21,6 +21,7 @@ public class ConfigController {
     public ResponseEntity<String> getOccupationId() {
         return ResponseEntity.ok(cclPropertyService.getOccupationId());
     }
+
     @GetMapping("/type_renseignement/id")
     public ResponseEntity<String> getRenseignementId() {
         return ResponseEntity.ok(cclPropertyService.getRenseignementId());
@@ -28,5 +29,16 @@ public class ConfigController {
     @GetMapping("/type_classement/id")
     public ResponseEntity<String> getClassementId() {
         return ResponseEntity.ok(cclPropertyService.getClassementId());
+    }
+
+    @GetMapping("/etat_code/reelle")
+    public ResponseEntity<Integer> getCodeReelle() {
+        return ResponseEntity.ok(cclPropertyService.getReelleCode());
+    }
+
+
+    @GetMapping("/etat_code/payee")
+    public ResponseEntity<Integer> getCodePayee() {
+        return ResponseEntity.ok(cclPropertyService.getPayeCode());
     }
 }

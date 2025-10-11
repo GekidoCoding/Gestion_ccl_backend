@@ -44,17 +44,10 @@ public class MouvementCalendarDto {
         this.setInfrastructure(infrastructure);
 
         Client client = new Client();
-        String nom = m.getClient() != null ? m.getClient().getNom() : null;
-        String prenom = m.getClient() != null ? m.getClient().getPrenom() : null;
-        String raisonSociale = m.getClient() != null ? m.getClient().getRaisonSociale() : null;
+        String nom = m.getClient() != null ? m.getClient().getDesignationClient() : null;
+        client.setDesignationClient(nom );
 
-        if (nom == null && prenom == null) {
-            client.setNom(raisonSociale != null ? raisonSociale : "N/A");
-        } else {
-            nom = (nom != null) ? nom : "";
-            prenom = (prenom != null) ? prenom : "";
-            client.setNom(nom + " " + prenom);
-        }
+
         this.setClient(client);
 
         this.setPeriodeDebut(TimestampUtil.formatTimestampWithT(m.getPeriodeDebut()));

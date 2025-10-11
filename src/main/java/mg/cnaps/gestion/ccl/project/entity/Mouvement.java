@@ -1,13 +1,10 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
-import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -54,5 +51,6 @@ public class Mouvement {
     @OneToMany(mappedBy = "mouvement", orphanRemoval = true)
     @JsonManagedReference
     private List<MouvementInfra> mouvementInfras;
+
 
 }

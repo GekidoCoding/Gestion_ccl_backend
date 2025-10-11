@@ -3,7 +3,9 @@ package mg.cnaps.gestion.ccl.project.util;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.exception.FrequenceNotFoundException;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -13,27 +15,26 @@ import java.time.temporal.ChronoUnit;
 public class TimestampUtil {
 
     public static String formatTimestamp(Timestamp timestamp) {
-//        if (timestamp == null) return "";
-//
-//        LocalDateTime dateTime = timestamp.toLocalDateTime();
-//
-//        DayOfWeek dayOfWeek = dateTime.getDayOfWeek();
-//        int day = dateTime.getDayOfMonth();
-//        Month month = dateTime.getMonth();
-//        int year = dateTime.getYear();
-//        int hour = dateTime.getHour();
-//        int minute = dateTime.getMinute();
-//        int second = dateTime.getSecond();
-//
-//        String dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.FRENCH);
-//        String monthName = month.getDisplayName(TextStyle.SHORT, Locale.FRENCH);
-//
-//        return String.format(
-//                "%s %02d %s %d à %02d:%02d:%02d",
-//                dayName, day, monthName, year, hour, minute, second
-//        );
         if (timestamp == null) return "";
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm:ss");
+        return sdf.format(timestamp);
+    }
+    public static Timestamp parseTimestamp(String dateString) {
+        if (dateString == null || dateString.isEmpty()) return null;
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = (Date) sdf.parse(dateString);
+            return new Timestamp(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String formatTimestampNoHours(Timestamp timestamp) {
+        if (timestamp == null) return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(timestamp);
     }
     public static String formatTimestampWithT(Timestamp timestamp) {
@@ -81,5 +82,13 @@ public class TimestampUtil {
             return (double) durees[2];
         }
         throw new FrequenceNotFoundException("Type de frequence non considerer !");
+    }
+    /**
+     * Retourne true si les deux intervalles [startA,endA] et [startB,endB] se chevauchent.
+     * La comparaison est inclusive : si endA == startB ou startA == endB -> considéré comme chevauchement.
+     * Si tu veux exclure les bornes (fin == début), utilise strictement > / < (after/before).
+     */
+    public static boolean isOverlap(Timestamp startA, Timestamp endA, Timestamp startB, Timestamp endB) {
+        return !endA.before(startB) && !startA.after(endB);
     }
 }

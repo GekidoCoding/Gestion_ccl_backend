@@ -1,6 +1,6 @@
 package mg.cnaps.gestion.ccl.project.controller;
 
-import mg.cnaps.gestion.ccl.framework.core.controller.GenericController;
+import mg.cnaps.gestion.ccl.framework.jpa.core.controller.GenericController;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.TypeClient;
 import mg.cnaps.gestion.ccl.project.service.TypeClientService;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/cnaps/gestion/ccl/type_client")
+@RequestMapping("/type_client")
 public class TypeClientController extends GenericController<TypeClient , String ,TypeClientService > {
     private final CclPropertyService servicePropertyService;
     public TypeClientController(TypeClientService service , CclPropertyService servicePropertyService) {
@@ -20,7 +20,6 @@ public class TypeClientController extends GenericController<TypeClient , String 
 
     @GetMapping("/personne/id")
     public ResponseEntity<String> getPersonneId() {
-        System.out.println("getPersonneId:"+servicePropertyService.getPersonneId());
         return ResponseEntity.ok(servicePropertyService.getPersonneId());
     }
 

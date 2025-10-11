@@ -1,17 +1,18 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import mg.cnaps.gestion.ccl.framework.check.annotation.CheckField;
+import mg.cnaps.gestion.ccl.framework.check.annotation.Checkable;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
 
+@Checkable(similarityDegree = 70.0)
 @Getter
 @Setter
 @Entity
@@ -27,10 +28,12 @@ public class Infrastructure {
         }
     }
 
+    @CheckField
     @Size(max = 255)
     @Column(name = "NUMERO")
     private String numero;
 
+    @CheckField
     @Size(max = 255)
     @Column(name = "NOM_INFRA")
     private String nom;

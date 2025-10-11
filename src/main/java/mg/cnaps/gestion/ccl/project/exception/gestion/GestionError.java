@@ -1,7 +1,7 @@
 package mg.cnaps.gestion.ccl.project.exception.gestion;
 
-import mg.cnaps.gestion.ccl.framework.core.exception.GestionGlobaleException;
-import mg.cnaps.gestion.ccl.framework.error.ErrorResponse;
+import mg.cnaps.gestion.ccl.framework.jpa.core.exception.GestionGlobaleException;
+import mg.cnaps.gestion.ccl.framework.general.error.ErrorResponse;
 import mg.cnaps.gestion.ccl.project.exception.EtatNotFoundException;
 import mg.cnaps.gestion.ccl.project.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;

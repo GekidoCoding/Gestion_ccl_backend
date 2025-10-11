@@ -1,20 +1,23 @@
 package mg.cnaps.gestion.ccl.project.service.impl;
 
-import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
+import mg.cnaps.gestion.ccl.framework.check.util.ObjectComparator;
+import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.exception.EtatNotFoundException;
 import mg.cnaps.gestion.ccl.project.repository.*;
 import mg.cnaps.gestion.ccl.project.service.InfrastructureService;
 import mg.cnaps.gestion.ccl.project.util.CclProperty;
+import mg.cnaps.gestion.ccl.project.util.GestionnaireUtil;
+import mg.cnaps.gestion.ccl.project.util.PageUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -27,14 +30,17 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
     private final MouvementRepo mouvementRepo;
     private final CclPropertyService cclPropertyService;
     private  final InfraTarifRepo infraTarifRepo;
-    public InfrastructureImpl(InfrastructureRepo repo, EtatRepo etatRepo, HistoriqueInfraRepo historiqueInfraRepo, MouvementRepo mouvementRepo, CclPropertyService cclPropertyService, InfraTarifRepo infraTarifRepo) {
+    private final GestionnaireUtil gestionnaireUtil;
+    public InfrastructureImpl(InfrastructureRepo repo, EtatRepo etatRepo, HistoriqueInfraRepo historiqueInfraRepo, MouvementRepo mouvementRepo, CclPropertyService cclPropertyService, InfraTarifRepo infraTarifRepo, GestionnaireUtil gestionnaireUtil) {
         super(repo);
         this.etatRepo = etatRepo;
         this.historiqueInfraRepo = historiqueInfraRepo;
         this.mouvementRepo = mouvementRepo;
         this.cclPropertyService = cclPropertyService;
         this.infraTarifRepo = infraTarifRepo;
+        this.gestionnaireUtil = gestionnaireUtil;
     }
+
 
     @Override
     public List<Infrastructure> findAll() {
@@ -45,18 +51,32 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public Page<Infrastructure> findPaginated(int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<Infrastructure> pageContent = repository.findAll(pageable);
-        List<Infrastructure> filteredContent = pageContent.getContent().stream()
-                .filter(infra -> !infra.getEtat().getCode().equals(cclPropertyService.getInactifCode()))
-                .collect(Collectors.toList());
-        return new PageImpl<>(filteredContent, pageable, filteredContent.size());
+    public List<Infrastructure> checkSimilarity(Infrastructure infrastructure){
+        List<Infrastructure> infrastructures = this.findAll()  ;
+        List<Infrastructure> infraSimilaire = new ArrayList<>();
+        for (Infrastructure infra : infrastructures) {
+            if(ObjectComparator.isDegreeAtteint(infra , infrastructure)){
+                infraSimilaire.add(infra);
+            }
+        }
+        return infraSimilaire;
     }
 
     @Override
-    public Infrastructure save(Infrastructure entity) {
+    public Page<Infrastructure> findPaginated(int page, int pageSize) {
+        List<Infrastructure> allFiltered = repository.findAll();
+
+       List<Infrastructure> paged = new PageUtil<Infrastructure>().paginateList(page, pageSize, allFiltered);
+
+        return new PageImpl<>(paged, PageRequest.of(page, pageSize), allFiltered.size());
+
+    }
+
+    @Override
+    public Infrastructure save(Infrastructure entity, String matricule) {
+        Gestionnaire gestionnaire = this.gestionnaireUtil.getGestionnaireHisto(matricule);
         List<InfraTarif> tarifs = entity.getInfraTarifs();
 
         if (entity.getEtat() == null || entity.getEtat().getId() == null) {
@@ -76,14 +96,24 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
         HistoriqueInfra historiqueInfra = new HistoriqueInfra();
         historiqueInfra.setInfrastructure(savedInfra);
         historiqueInfra.setObservation("");
+
+        historiqueInfra.setGestionnaire(gestionnaire);
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
         historiqueInfraRepo.save(historiqueInfra);
 
         return savedInfra;
     }
 
+    private void deleteExistTarifs(InfraTarif tarif , List<InfraTarif> existings){
+        for (InfraTarif exist : existings) {
+            if(tarif.getFrequence().getId().equals(exist.getFrequence().getId())){
+                this.infraTarifRepo.delete(exist);
+            }
+        }
+    }
     @Override
-    public Infrastructure update(Infrastructure entity, String id) {
+    public Infrastructure update(Infrastructure entity, String id, String matricule) {
+        Gestionnaire gestionnaire = this.gestionnaireUtil.getGestionnaireHisto(matricule);
         List<InfraTarif> tarifs = entity.getInfraTarifs();
         if (!repository.existsById(id)) {
             throw new RuntimeException("Not Found ID");
@@ -96,15 +126,19 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
 
         entity.setId(id); // s'assurer que l'id est correct
         Infrastructure updatedInfra = repository.save(entity);
-
+        List<InfraTarif> infraTarifs =this.infraTarifRepo.getAllByInfrastructure_Id(updatedInfra.getId());
         if (tarifs != null) {
             for (InfraTarif tarif : tarifs) {
+                this.deleteExistTarifs(tarif ,infraTarifs);
                 tarif.setInfrastructure(updatedInfra);
+
                 infraTarifRepo.save(tarif);
             }
         }
 
         HistoriqueInfra historiqueInfra = new HistoriqueInfra();
+
+        historiqueInfra.setGestionnaire(gestionnaire);
         historiqueInfra.setInfrastructure(updatedInfra);
         historiqueInfra.setObservation("");
         historiqueInfra.setDhAction(Timestamp.from(Instant.now()));
@@ -112,6 +146,7 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
 
         return updatedInfra;
     }
+
 
 
     @Override
@@ -152,19 +187,25 @@ public class InfrastructureImpl extends GenericServiceImpl<Infrastructure, Strin
                                                   CategorieInfra catInfra,
                                                   Timestamp debut,
                                                   Timestamp fin) {
-        Page<Infrastructure> infrastructures = this.findPaginated(page, pageSize);
+        try{
+            List<Infrastructure> allFiltered = this.findAll().stream()
+                    .filter(Objects::nonNull)
+                    .filter(infra -> matchCriteria(infra, criteria))
+                    .filter(infra -> matchModeleAndCategorie(infra, modeles, catInfra))
+                    .filter(infra -> matchLocalisations(infra, localisations))
+                    .filter(infra -> isNotOccupiedDuring(infra, debut, fin))
+                    .collect(Collectors.toList());
 
-        List<Infrastructure> filtered = infrastructures.getContent().stream()
-                .filter(Objects::nonNull)
-                .filter(infra -> matchCriteria(infra, criteria))
-                .filter(infra -> matchModeleAndCategorie(infra, modeles, catInfra))
-                .filter(infra -> matchLocalisations(infra, localisations))
-                .filter(infra -> isNotOccupiedDuring(infra, debut, fin))
-                .collect(Collectors.toList());
+            List<Infrastructure> paged = new PageUtil<Infrastructure>().paginateList(page, pageSize, allFiltered);
 
-        Pageable pageable = PageRequest.of(page, pageSize);
-        return new PageImpl<>(filtered, pageable, infrastructures.getTotalElements());
+            return new PageImpl<>(paged, PageRequest.of(page, pageSize), allFiltered.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
+
 
 
     private boolean matchCriteria(Infrastructure infra, Infrastructure criteria) {

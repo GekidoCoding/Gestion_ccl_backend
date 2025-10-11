@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cnaps/gestion/ccl/dashboard")
+@RequestMapping("/dashboard")
 public class DashboardController {
     private final HistoriqueMvtService historiqueMvtService;
 

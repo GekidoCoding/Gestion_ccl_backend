@@ -1,19 +1,21 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
-import lombok.Data;
-
 import lombok.Getter;
 import lombok.Setter;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import mg.cnaps.gestion.ccl.framework.check.annotation.CheckField;
+import mg.cnaps.gestion.ccl.framework.check.annotation.Checkable;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+@Checkable
 @Getter
 @Setter
 @Entity
 @Table(name = "CCL2_LOCALISATION")
 public class Localisation {
+    @CheckField
     @Id
     @Column(name = "ID")
     private String id;
@@ -24,6 +26,7 @@ public class Localisation {
         }
     }
 
+    @CheckField
     @Size(max = 255)
     @Column(name = "NOM_LOCALISATION")
     private String nom;

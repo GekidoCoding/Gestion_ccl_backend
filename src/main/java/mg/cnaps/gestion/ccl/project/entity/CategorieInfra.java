@@ -1,14 +1,16 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import mg.cnaps.gestion.ccl.framework.check.annotation.CheckField;
+import mg.cnaps.gestion.ccl.framework.check.annotation.Checkable;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+@Checkable
 @Getter
 @Setter
 @Entity
@@ -23,7 +25,7 @@ public class CategorieInfra {
             this.setId(IdGeneratorUtil.generate("SEQ_CCL2_CATEGORIE_INFRA" ,"CATINF-",8  ,"oracle" ));
         }
     }
-
+    @CheckField
     @Size(max = 255)
     @Column(name = "NOM_CAT_INFRA")
     private String nom;

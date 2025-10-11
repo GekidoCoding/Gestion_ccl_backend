@@ -18,6 +18,9 @@ public class CclProperty {
     @Value("${etat.reelle.code}")
     private int reelleCode;
 
+    @Value("${etat.paye.code}")
+    private int payeCode;
+
     @Value("${type.mouvement.classement.id}")
     private String classementId;
     @Value("${type.mouvement.renseignement.id}")
@@ -35,6 +38,25 @@ public class CclProperty {
     @Value("${facture.remise}")
     private double factureRemise;
 
+    @Value("${avance.paiement}")
+    private double avancePaiement;
+
+    @Value("${delai.paiement.jour}")
+    private int delaiPaiementJour;
+
+
+
+    @Value("${my.mail}")
+    private String myMail;
+
+    @Value("${preparation.signalement.jour}")
+    private int preparationSignalementJour;
+
+
+    @Value("${heure.paiement.delai}")
+    private double heurePaiementRemise;
+
+
 
     @Value("${frequence.default.id}")
     private String frequenceDefaultId;
@@ -49,6 +71,24 @@ public class CclProperty {
 
     @Value("${frequence.mois.id}")
     private String frequenceMoisId;
+
+    @Value("${type.notification.danger.id}")
+    private String typeNotificationDangerId;
+
+    @Value("${type.notification.signalement.id}")
+    private String typeNotificationSignalementId;
+
+    @Value("${schedule.hour}")
+    private String scheduleHour;
+
+
+    @Value("${facture.proforma.export.path}")
+    private String factureProformaExportPath;
+
+
+    @Value("${facture.reelle.export.path}")
+    private String factureReelleExportPath;
+
 
     @Value("${frequence.nuit.id}")
     private String frequenceNuitId;

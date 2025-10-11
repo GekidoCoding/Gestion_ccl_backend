@@ -20,6 +20,12 @@ public class CclPropertyService {
     public Integer getProformaCode(){
         return cclPropertyService.getProformaCode();
     }
+    public Integer getReelleCode(){
+        return cclPropertyService.getReelleCode();
+    }
+    public Integer getPayeCode(){
+        return cclPropertyService.getPayeCode();
+    }
 
     public Integer getActifCode(){
         return cclPropertyService.getActifCode();
@@ -35,11 +41,26 @@ public class CclPropertyService {
         return cclPropertyService.getRenseignementId();
     }
     public String getClassementId(){
-        System.out.println("classementId:"+cclPropertyService.getClassementId());
         return cclPropertyService.getClassementId();
     }
     public double getFactureRemise(){
         return cclPropertyService.getFactureRemise();
+    }
+    public double getAvancePaiement(){
+        return cclPropertyService.getAvancePaiement();
+    }
+    public int getDelaiPaiementJour(){
+        return cclPropertyService.getDelaiPaiementJour();
+    }
+    public int getPreparationSignalementJour(){
+        return cclPropertyService.getPreparationSignalementJour();
+    }
+    public String getMyMail(){
+        return cclPropertyService.getMyMail();
+    }
+
+    public double getHeurePaiementRemise(){
+        return cclPropertyService.getHeurePaiementRemise();
     }
     public String getFrequenceDefaultId(){
         return cclPropertyService.getFrequenceDefaultId();
@@ -58,6 +79,22 @@ public class CclPropertyService {
     }
     public String getFrequenceMoisId(){
         return cclPropertyService.getFrequenceMoisId();
+    }
+    public String getTypeNotificationDangerId(){
+        return cclPropertyService.getTypeNotificationDangerId();
+    }
+    public String getTypeNotificationSignalementId(){
+        return cclPropertyService.getTypeNotificationSignalementId();
+    }
+
+    public String getScheduleHour(){
+        return cclPropertyService.getScheduleHour();
+    }
+    public String getFactureProformaExportPath(){
+        return cclPropertyService.getFactureProformaExportPath();
+    }
+    public String getFactureReelleExportPath(){
+        return cclPropertyService.getFactureReelleExportPath();
     }
 
 }

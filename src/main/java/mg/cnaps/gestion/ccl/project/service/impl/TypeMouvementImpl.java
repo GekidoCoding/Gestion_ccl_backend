@@ -1,6 +1,6 @@
 package mg.cnaps.gestion.ccl.project.service.impl;
 
-import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
+import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.TypeMouvement;
 import mg.cnaps.gestion.ccl.project.repository.TypeMouvementRepo;
@@ -26,4 +26,12 @@ public class TypeMouvementImpl extends GenericServiceImpl<TypeMouvement, String 
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<TypeMouvement> getTypeMouvementAdding() {
+        return this.findAll().stream()
+                .filter(tm -> tm.getId().equals(cclPropertyService.getReservationId())
+                        || tm.getId().equals(cclPropertyService.getRenseignementId())
+                        ||  tm.getId().equals(cclPropertyService.getOccupationId()))
+                .collect(Collectors.toList());
+    }
 }

@@ -1,17 +1,14 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 import mg.cnaps.gestion.ccl.project.util.TimestampUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 
 @Getter
@@ -35,7 +32,6 @@ public class HistoFacture {
     @JoinColumn(name = "ID_FACTURE")
     private Facture facture;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_ETAT")
     private Etat etat;
@@ -50,7 +46,6 @@ public class HistoFacture {
     @Column(name = "MONTANT")
     private Double montant;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_GESTIONNAIRE")
     private Gestionnaire gestionnaire;

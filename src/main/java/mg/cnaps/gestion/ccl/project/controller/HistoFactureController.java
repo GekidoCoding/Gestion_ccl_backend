@@ -1,11 +1,8 @@
 package mg.cnaps.gestion.ccl.project.controller;
 
-import mg.cnaps.gestion.ccl.framework.core.controller.GenericController;
-import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
+import mg.cnaps.gestion.ccl.framework.jpa.core.controller.GenericController;
 import mg.cnaps.gestion.ccl.project.entity.HistoFacture;
 import mg.cnaps.gestion.ccl.project.service.HistoFactureService;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cnaps/gestion/ccl/histo_facture")
+@RequestMapping("/histo_facture")
 public class HistoFactureController extends GenericController<HistoFacture, String , HistoFactureService> {
 
 

@@ -1,6 +1,6 @@
 package mg.cnaps.gestion.ccl.project.controller;
 
-import mg.cnaps.gestion.ccl.framework.core.controller.GenericController;
+import mg.cnaps.gestion.ccl.framework.jpa.core.controller.GenericController;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.Frequence;
 import mg.cnaps.gestion.ccl.project.service.FrequenceService;
@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cnaps/gestion/ccl/frequence")
+@RequestMapping("/frequence")
 public class FrequenceController extends GenericController<Frequence , String ,FrequenceService > {
     private final CclPropertyService cclPropertyService;
 

@@ -1,16 +1,17 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
+import mg.cnaps.gestion.ccl.framework.check.annotation.CheckField;
+import mg.cnaps.gestion.ccl.framework.check.annotation.Checkable;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 
+@Checkable(similarityDegree = 70.0)
 @Getter
 @Setter
 @Entity
@@ -26,17 +27,11 @@ public class Client {
         }
     }
 
+    @CheckField
     @Size(max = 255)
-    @Column(name = "NOM_CLIENT")
-    private String nom;
+    @Column(name = "DESIGNATION_CLIENT")
+    private String designationClient;
 
-    @Size(max = 255)
-    @Column(name = "PRENOM_CLIENT")
-    private String prenom;
-
-    @Size(max = 255)
-    @Column(name = "RAISON_SOCIALE")
-    private String raisonSociale;
 
     @Size(max = 255)
     @Column(name = "FONCTION")
@@ -55,6 +50,7 @@ public class Client {
     @Column(name = "ADRESSE")
     private String adresse;
 
+    @CheckField
     @Size(max = 255)
     @Column(name = "CONTACTS")
     private String contacts;
@@ -71,6 +67,9 @@ public class Client {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_TYPE_CLIENT")
     private TypeClient typeClient;
+
+    public Client() {
+    }
 
 
 }

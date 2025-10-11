@@ -1,6 +1,6 @@
 package mg.cnaps.gestion.ccl.project.service.impl;
 
-import mg.cnaps.gestion.ccl.framework.core.service.implementation.GenericServiceImpl;
+import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericServiceImpl;
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.Etat;
 import mg.cnaps.gestion.ccl.project.repository.EtatRepo;

@@ -13,7 +13,7 @@
 
 	<groupId>mg.cnaps.gestion</groupId>
 	<artifactId>ccl</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>gestion-ccl</name>
 	<description>Gestion CCL CNaPS </description>
 
@@ -54,6 +54,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.19.1</version>
+		</dependency>
+
 		<!-- Validation -->
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -76,6 +82,15 @@
 			<optional>true</optional>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
+
+
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -92,6 +107,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>gestion-ccl</finalName>
 		<plugins>
 
 			<!-- Compiler plugin -->
@@ -110,6 +126,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<executable>true</executable>
+					<excludeDevtools>true</excludeDevtools>
 					<image>
 						<builder>paketobuildpacks/builder-jammy-base:latest</builder>
 					</image>

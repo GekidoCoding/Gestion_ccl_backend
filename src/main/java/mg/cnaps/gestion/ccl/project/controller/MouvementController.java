@@ -1,6 +1,8 @@
 package mg.cnaps.gestion.ccl.project.controller;
 
-import mg.cnaps.gestion.ccl.framework.core.controller.GenericController;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import mg.cnaps.gestion.ccl.framework.jpa.core.controller.GenericController;
+import mg.cnaps.gestion.ccl.framework.general.error.ErrorResponse;
 import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.entity.dto.mouvement.MouvementCalendarDto;
 import mg.cnaps.gestion.ccl.project.entity.dto.mouvement.MouvementDto;
@@ -11,15 +13,46 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cnaps/gestion/ccl/mouvement")
+@RequestMapping("/mouvement")
 public class MouvementController extends GenericController<Mouvement , String ,MouvementService > {
     public MouvementController(MouvementService service ) {
         super(service);
+    }
+
+
+    @PutMapping("/update/new/{id}")
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody @Valid Mouvement dto , HttpServletRequest request) throws JsonProcessingException {
+        try {
+            String matricule=request.getAttribute("matricule").toString();
+            return ResponseEntity.ok(getService().update(dto, id , matricule));
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+
+    }
+    @PostMapping("/create/new")
+    public ResponseEntity<?> create(@RequestBody Mouvement dto , HttpServletRequest request)  {
+        try {
+            String matricule=request.getAttribute("matricule").toString();
+            return ResponseEntity.ok(getService().save(dto , matricule));
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
     }
 
     @GetMapping("/pagination/order")
@@ -49,6 +82,7 @@ public class MouvementController extends GenericController<Mouvement , String ,M
     @GetMapping("/search/criteria")
     public ResponseEntity<Page<MouvementDto>> getAllCriteriaSearch(
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String id ,
             @RequestParam(required = false) String catInfraId ,
             @RequestParam(required = false) String typeMouvementId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime debut,
@@ -62,6 +96,9 @@ public class MouvementController extends GenericController<Mouvement , String ,M
         Infrastructure infra = new  Infrastructure();
         infra.setModeleInfra(modeleInfra);
 
+//        ajouter infrastructure
+        MouvementInfra mouvementInfra = new MouvementInfra();
+        criteria.getMouvementInfras().add(mouvementInfra);
 
         TypeMouvement typeMouvement = new TypeMouvement();
         typeMouvement.setId(typeMouvementId);
@@ -69,7 +106,7 @@ public class MouvementController extends GenericController<Mouvement , String ,M
         criteria.setTypeMouvement(typeMouvement);
 
         criteria.getTypeMouvement().setId(typeMouvementId);
-
+        criteria.setId(id);
         Timestamp debutTs =(debut != null) ? Timestamp.valueOf(debut) : null;
         Timestamp finTs =(fin != null) ? Timestamp.valueOf(fin) : null;
         criteria.setPeriodeDebut(debutTs);
@@ -95,7 +132,6 @@ public class MouvementController extends GenericController<Mouvement , String ,M
             @RequestParam(value = "modelesIds" , required = false) String[] modeles
 
     ){
-//        System.out.println("infrastructureId:"+infratructureId +" modeles:"+modeles[0]);
         return ResponseEntity.ok( service.getMouvementCalendarDtoByCriteria(infratructureId , modeles)) ;
     }
 
@@ -104,8 +140,14 @@ public class MouvementController extends GenericController<Mouvement , String ,M
         return ResponseEntity.ok(service.accorderMouvement(id) );
     }
     @PutMapping("/classer/{id}")
-    public ResponseEntity<Mouvement> classerMouvement(@PathVariable String id){
-        return ResponseEntity.ok(service.classerMouvement(id) );
+    public ResponseEntity<?> classerMouvement(@PathVariable String id , HttpServletRequest request){
+        try{
+            String matricule = request.getAttribute("matricule").toString();
+            return ResponseEntity.ok(service.classerMouvement(id , matricule) );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/verify/conflict")

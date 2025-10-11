@@ -1,13 +1,10 @@
 package mg.cnaps.gestion.ccl.project.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import mg.cnaps.gestion.ccl.framework.core.generator.IdGeneratorUtil;
-import mg.cnaps.gestion.ccl.project.entity.existant.Agent;
+import mg.cnaps.gestion.ccl.framework.jpa.core.generator.IdGeneratorUtil;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 
 @Getter
@@ -25,10 +22,9 @@ public class Gestionnaire {
         }
     }
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER , optional = false)
-    @JoinColumn(name = "MATRICULE_GESTIONNAIRE" , nullable = false)
-    private Agent  agent;
+
+    @JoinColumn(name = "MATRICULE_GESTIONNAIRE")
+    private String  matriculeGestionnaire;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_ETAT")

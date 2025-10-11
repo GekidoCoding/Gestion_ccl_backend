@@ -1,17 +1,16 @@
 package mg.cnaps.gestion.ccl.project.controller;
 
-import mg.cnaps.gestion.ccl.framework.core.controller.GenericController;
+import mg.cnaps.gestion.ccl.framework.jpa.core.controller.GenericController;
 import mg.cnaps.gestion.ccl.project.entity.HistoriqueMvt;
 import mg.cnaps.gestion.ccl.project.service.HistoriqueMvtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cnaps/gestion/ccl/historique_mvt")
+@RequestMapping("/historique_mvt")
 public class HistoriqueMvtController extends GenericController<HistoriqueMvt , String ,HistoriqueMvtService > {
     public HistoriqueMvtController(HistoriqueMvtService service ) {
         super(service);
