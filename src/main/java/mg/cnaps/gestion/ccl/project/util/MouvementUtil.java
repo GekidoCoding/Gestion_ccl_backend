@@ -162,6 +162,8 @@ public class MouvementUtil {
                 .anyMatch(infra -> catInfraId.equals(infra.getModeleInfra().getCatInfra().getId()));
     }
 
+
+
     public boolean matchCriteria(Mouvement criteria, MouvementDto mouvementDto, String catInfraId, HistoriqueMvtRepo historiqueRepo, MouvementRepo mouvementRepo) {
         if (criteria == null || mouvementDto == null) {
             return false;
@@ -192,11 +194,14 @@ public class MouvementUtil {
                 return false;
             }
         }
-        if(criteria.getClient().getId()!=null){
-            if(mouvementDto.getClient().getId()==null || !mouvementDto.getClient().getId().contains(criteria.getClient().getId())){
+        if (criteria.getClient() != null && criteria.getClient().getId() != null) {
+            if (mouvementDto.getClient() == null ||
+                    mouvementDto.getClient().getId() == null ||
+                    !mouvementDto.getClient().getId().contains(criteria.getClient().getId())) {
                 return false;
             }
         }
+
 
         if (criteria.getPeriodeDebut() != null && criteria.getPeriodeFin() != null) {
             List<HistoriqueMvt> historiques = historiqueRepo.findHistoriqueMvtByMouvement_Id(mouvementDto.getId());
@@ -204,14 +209,14 @@ public class MouvementUtil {
                 return false;
             }
 
-            for (HistoriqueMvt histo : historiques) {
-                if (histo != null && histo.getDhAction() != null) {
-                    Timestamp dhAction = histo.getDhActionTimestamp();
-                    if (dhAction.before(criteria.getPeriodeDebut()) || dhAction.after(criteria.getPeriodeFin())) {
-                        return false;
-                    }
-                }
-            }
+            return historiques.stream()
+                    .anyMatch(histo -> {
+                        Timestamp dh = histo.getDhActionTimestamp();
+                        return dh != null &&
+                                !dh.before(criteria.getPeriodeDebut()) &&
+                                !dh.after(criteria.getPeriodeFin());
+                    });
+
         }
 
         return true;

@@ -57,6 +57,9 @@ public class Facture {
     @Column(name = "TOTAL_DU")
     private Double totalDu;
 
+
+
+
     public String getRefFacture() {
         String year = String.valueOf(java.time.Year.now().getValue());
 

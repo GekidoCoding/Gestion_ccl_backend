@@ -7,6 +7,7 @@ import mg.cnaps.gestion.ccl.project.entity.*;
 import mg.cnaps.gestion.ccl.project.entity.dto.mouvement.MouvementCalendarDto;
 import mg.cnaps.gestion.ccl.project.entity.dto.mouvement.MouvementDto;
 import mg.cnaps.gestion.ccl.project.service.MouvementService;
+import mg.cnaps.gestion.ccl.project.service.impl.VisualisationImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -17,15 +18,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/mouvement")
 public class MouvementController extends GenericController<Mouvement , String ,MouvementService > {
-    public MouvementController(MouvementService service ) {
+    private final VisualisationImpl visualisation;
+
+    public MouvementController(MouvementService service, VisualisationImpl visualisation) {
         super(service);
+        this.visualisation = visualisation;
     }
 
+    @GetMapping("/visualisation/{mouvementId}")
+    public ResponseEntity<?> getVisualisation(@PathVariable String mouvementId) {
+        try {
+            return ResponseEntity.ok(this.visualisation.findVisualisationByMouvementId(mouvementId));
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+
+    }
 
     @PutMapping("/update/new/{id}")
     public ResponseEntity<?> update(@PathVariable String id, @RequestBody @Valid Mouvement dto , HttpServletRequest request) throws JsonProcessingException {
@@ -81,39 +99,55 @@ public class MouvementController extends GenericController<Mouvement , String ,M
 
     @GetMapping("/search/criteria")
     public ResponseEntity<Page<MouvementDto>> getAllCriteriaSearch(
-            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(required = false) String id ,
-            @RequestParam(required = false) String catInfraId ,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String catInfraId,
             @RequestParam(required = false) String typeMouvementId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime debut,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin
-    ){
-        Mouvement criteria =new  Mouvement();
-        CategorieInfra catInfra = new CategorieInfra();
-        catInfra.setId(catInfraId);
-        ModeleInfra modeleInfra = new ModeleInfra();
-        modeleInfra.setCatInfra(catInfra);
-        Infrastructure infra = new  Infrastructure();
-        infra.setModeleInfra(modeleInfra);
+    ) {
+        try {
+            Mouvement criteria = new Mouvement();
 
-//        ajouter infrastructure
-        MouvementInfra mouvementInfra = new MouvementInfra();
-        criteria.getMouvementInfras().add(mouvementInfra);
+            // Type mouvement
+            if (typeMouvementId != null) {
+                TypeMouvement typeMouvement = new TypeMouvement();
+                typeMouvement.setId(typeMouvementId);
+                criteria.setTypeMouvement(typeMouvement);
+            }
 
-        TypeMouvement typeMouvement = new TypeMouvement();
-        typeMouvement.setId(typeMouvementId);
+            // Client (évite NullPointer)
+            criteria.setClient(new Client());
 
-        criteria.setTypeMouvement(typeMouvement);
+            // Catégorie infra
+            if (catInfraId != null) {
+                CategorieInfra catInfra = new CategorieInfra();
+                catInfra.setId(catInfraId);
+                ModeleInfra modeleInfra = new ModeleInfra();
+                modeleInfra.setCatInfra(catInfra);
+                Infrastructure infra = new Infrastructure();
+                infra.setModeleInfra(modeleInfra);
 
-        criteria.getTypeMouvement().setId(typeMouvementId);
-        criteria.setId(id);
-        Timestamp debutTs =(debut != null) ? Timestamp.valueOf(debut) : null;
-        Timestamp finTs =(fin != null) ? Timestamp.valueOf(fin) : null;
-        criteria.setPeriodeDebut(debutTs);
-        criteria.setPeriodeFin(finTs);
+                MouvementInfra mouvementInfra = new MouvementInfra();
+                mouvementInfra.setInfrastructure(infra);
 
-        return ResponseEntity.ok(service.getAllCriteria(page , pageSize , criteria , catInfraId )) ;
+                List<MouvementInfra> list = new ArrayList<>();
+                list.add(mouvementInfra);
+                criteria.setMouvementInfras(list);
+            }
+
+            criteria.setId(id);
+            criteria.setPeriodeDebut(debut != null ? Timestamp.valueOf(debut) : null);
+            criteria.setPeriodeFin(fin != null ? Timestamp.valueOf(fin) : null);
+
+            return ResponseEntity.ok(service.getAllCriteria(page, pageSize, criteria, catInfraId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
+
 
     @GetMapping("/calendar")
     public ResponseEntity<List<MouvementCalendarDto>> getMouvementCalendarDto(){

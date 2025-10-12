@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface HistoFactureRepo extends GenericRepository<HistoFacture, String> {
     List<HistoFacture> getHistoFactureByFacture_Id(String factureId);
+
 }

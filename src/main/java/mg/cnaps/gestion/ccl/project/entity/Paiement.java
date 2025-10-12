@@ -40,6 +40,9 @@ public class Paiement {
     @JoinColumn(name = "MONNAIE")
     private Double monnaie;
 
+    @Column(name = "RESTE")
+    private Double reste;
+
     public String getDatePaiement() {
         return TimestampUtil.formatTimestamp(datePaiement);
     }

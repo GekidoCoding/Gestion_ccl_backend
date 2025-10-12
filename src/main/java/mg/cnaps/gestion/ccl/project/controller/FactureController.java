@@ -81,18 +81,7 @@ public class FactureController extends GenericController<Facture , String ,Factu
     }
 
 
-    @PostMapping("/email/send")
-    public ResponseEntity<String> sendEmail(
-            @RequestParam("destinataires") String[] destinataires
-    )  {
-        try {
-            emailService.sendEmailToMultipleRecipients( destinataires,"sujet test", "yess lesy eh mety lty eh");
-            return ResponseEntity.status(HttpStatus.CREATED).body("Email envoyé avec succès ");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'envoi de l'email : " + e.getMessage());
-        }
 
-    }
     private ResponseEntity<byte[]> buildPdfResponse(byte[] pdfBytes, String filename) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + filename)
@@ -113,6 +102,19 @@ public class FactureController extends GenericController<Facture , String ,Factu
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
+
+//    @PostMapping("/email/send")
+//    public ResponseEntity<String> sendEmail(
+//            @RequestParam("destinataires") String[] destinataires
+//    )  {
+//        try {
+//            emailService.sendEmailToMultipleRecipients( destinataires,"sujet test", "yess lesy eh mety lty eh");
+//            return ResponseEntity.status(HttpStatus.CREATED).body("Email envoyé avec succès ");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'envoi de l'email : " + e.getMessage());
+//        }
+//
+//    }
 
     @PostMapping("/sendEmail/facture")
     public ResponseEntity<?> sendEmailFactureToClientWithCopy(
@@ -170,12 +172,7 @@ public class FactureController extends GenericController<Facture , String ,Factu
 
     @PostMapping("/export-facture/{idPaiement}")
     public ResponseEntity<byte[]> generateFacture(@PathVariable("idPaiement") String idPaiement ) throws JRException {
-        Paiement paiement = this.paiementService.findById(idPaiement);
-        JasperReport jasperReport = this.service.loadReportTemplate(cclPropertyService.getFactureReelleExportPath());
-        Map<String, Object> params = this.service.buildReportParametersRelle(paiement);
-        List<Map<String, Object>> dataList = this.service.buildReportData(new MouvementDto(paiement.getFacture().getMouvement()));
-        JasperPrint jasperPrint = this.service.fillReport(jasperReport, params, dataList);
-        byte[] pdfBytes = this.service.exportReportToPdf(jasperPrint);
+        byte[] pdfBytes = this.service.getBytePdfPaiement(idPaiement);
         return buildPdfResponse(pdfBytes, "facture.pdf");
     }
 

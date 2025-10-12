@@ -53,7 +53,7 @@ public class Mouvement {
     private List<MouvementInfra> mouvementInfras;
 
     @Column(name = "OBSERVATION")
-    private Integer observation ;
+    private String observation ;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_ETAT")

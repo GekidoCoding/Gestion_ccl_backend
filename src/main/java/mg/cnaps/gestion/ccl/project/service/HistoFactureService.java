@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface HistoFactureService extends GenericService<HistoFacture, String> {
     List<HistoFacture> getHistoByFactureId(String factureId);
+
+    List<HistoFacture> getHistoByMouvementId(String mouvementId);
 }

@@ -19,7 +19,6 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -45,6 +44,40 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
         this.gestionnaireUtil = gestionnaireUtil;
         this.emailService = emailService;
     }
+    @Override
+    public void delete(String factureId) {
+        try{
+            List<Paiement> paiements = this.paiementService.findPaiementByFacture_Id(factureId);
+            for (Paiement paiement : paiements) {
+                this.paiementService.delete(paiement.getId());
+            }
+            List<HistoFacture> histoFactures = this.histoFactureRepo.getHistoFactureByFacture_Id(factureId);
+            histoFactureRepo.deleteAll(histoFactures);
+            this.repository.deleteById(factureId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public List<Facture> findAll(){
+        return this.repository.findAll().stream().filter( f-> !Objects.equals(f.getEtat().getCode(), cclPropertyService.getInactifCode())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Facture> getFacturesByMouvement_Id_findAll(String mouvementId){
+        List<Facture> factures = this.findAll();
+        List<Facture> newFactures = new ArrayList<>();
+        for (Facture facture : factures) {
+            if(facture.getMouvement().getId().equals(mouvementId)){
+                newFactures.add(facture);
+            }
+        }
+        return newFactures;
+    }
+
 
     @Override
     public List<FactureDto> getFacturesReellePayeByMouvement_Id(String mouvementId) {
@@ -68,6 +101,20 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public byte[] getBytePdfPaiement(String idPaiement) {
+        try{
+            Paiement paiement = this.paiementService.findById(idPaiement);
+            JasperReport jasperReport = this.loadReportTemplate(cclPropertyService.getFactureReelleExportPath());
+            Map<String, Object> params = this.buildReportParametersRelle(paiement);
+            List<Map<String, Object>> dataList = this.buildReportData(new MouvementDto(paiement.getFacture().getMouvement()));
+            JasperPrint jasperPrint = this.fillReport(jasperReport, params, dataList);
+            return this.exportReportToPdf(jasperPrint);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+   }
 
     @Override
     public List<FactureDto> getFacturesByMouvement_Id(String mouvementId) {
@@ -132,13 +179,9 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
         facture = repository.save(facture);
         facture.setRefFacture(facture.getRefFacture());
         facture = repository.save(facture);
-        HistoFacture  histoFacture = new HistoFacture();
-        histoFacture.setFacture(facture);
-        histoFacture.setEtat(facture.getEtat());
-        histoFacture.setGestionnaire(gestionnaire);
-        histoFacture.setRefFacture(facture.getRefFacture());
-        histoFacture.setMontant(facture.getMontantTotal());
-        histoFacture.setDhAction(Timestamp.valueOf(LocalDateTime.now()));
+
+        HistoFacture histoFacture= this.getHistoFacture(facture , gestionnaire);
+
         histoFactureRepo.save(histoFacture);
 
         return facture;
@@ -171,16 +214,22 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
             }
         }
         if(isExist==null){
-            HistoFacture  histo = new HistoFacture();
-            histo.setFacture(facture);
-            histo.setEtat(facture.getEtat());
-            histo.setRefFacture(facture.getRefFacture());
-            histo.setMontant(facture.getMontantTotal());
-            histo.setGestionnaire(gestionnaire);
-            histo.setDhAction(Timestamp.valueOf(LocalDateTime.now()));
-            histoFactureRepo.save(histo);
+            HistoFacture histoFacture= this.getHistoFacture(facture , gestionnaire);
+            histoFactureRepo.save(histoFacture);
         }
         return facture;
+    }
+    private HistoFacture getHistoFacture(Facture facture , Gestionnaire gestionnaire){
+        HistoFacture  histoFacture = new HistoFacture();
+        histoFacture.setFacture(facture);
+        histoFacture.setEtat(facture.getEtat());
+        histoFacture.setRefFacture(facture.getRefFacture());
+        histoFacture.setMontant(facture.getMontantTotal());
+        histoFacture.setGestionnaire(gestionnaire);
+        histoFacture.setDhAction(Timestamp.valueOf(LocalDateTime.now()));
+        histoFacture.setTotalDu(facture.getTotalDu());
+        histoFacture.setRemise(facture.getRemise());
+        return histoFacture;
     }
 
     @Override

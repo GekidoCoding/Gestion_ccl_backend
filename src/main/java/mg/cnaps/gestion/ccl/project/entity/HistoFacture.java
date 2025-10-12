@@ -46,6 +46,12 @@ public class HistoFacture {
     @Column(name = "MONTANT")
     private Double montant;
 
+    @Column(name = "TOTAL_DU")
+    private Double totalDu;
+
+    @Column(name = "REMISE")
+    private Double remise;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_GESTIONNAIRE")
     private Gestionnaire gestionnaire;
