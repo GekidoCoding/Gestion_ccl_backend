@@ -17,7 +17,6 @@ public class GestionnaireUtil {
         Gestionnaire gestionnaire = new Gestionnaire();
         if(matricule!=null && !matricule.isEmpty()){
             gestionnaire = gestionnaireRepo.findByAgent_Matricule(matricule);
-//            System.out.println("gestionnaire: "+gestionnaire.getAgent().getMatricule());
             if(gestionnaire==null){
                 throw new UnauthorizedUpdateException("Aucun gestionnaire avec le matricule "+matricule+" , alors non authorisee");
             }

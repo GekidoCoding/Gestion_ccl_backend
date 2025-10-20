@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Contrat_Vaovao" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f38301df-07b0-4e30-9841-763a6dd9cbb7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Contrat" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f38301df-07b0-4e30-9841-763a6dd9cbb7">
+	<parameter name="reff" class="java.lang.String"/>
+	<parameter name="denomination" class="java.lang.String"/>
+	<parameter name="telephone" class="java.lang.String"/>
+	<parameter name="email" class="java.lang.String"/>
+	<parameter name="adresse" class="java.lang.String"/>
+	<parameter name="somme" class="java.lang.Double"/>
+	<parameter name="remise" class="java.lang.Double"/>
+	<parameter name="dateDuJour" class="java.lang.String"/>
+	<parameter name="montantEnLettre" class="java.lang.String"/>
+	<parameter name="dateDebutReservation" class="java.lang.String"/>
+	<parameter name="dateFinReservation" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="denomination" class="java.lang.String"/>
-	<field name="telephone" class="java.lang.String"/>
-	<field name="email" class="java.lang.String"/>
-	<field name="adresse" class="java.lang.String"/>
-	<field name="prixTotal" class="java.lang.String"/>
-	<field name="acompte" class="java.lang.Double"/>
-	<field name="somme" class="java.lang.Double"/>
-	<field name="remise" class="java.lang.Double"/>
-	<field name="resteapayer" class="java.lang.Double"/>
-	<field name="dateDuJour" class="java.lang.String"/>
-	<field name="montantEnLettre" class="java.lang.String"/>
-	<field name="typeEvenement" class="java.lang.String"/>
-	<field name="lieuUtilise" class="java.lang.String"/>
-	<field name="dateDebutReservation" class="java.lang.String"/>
-	<field name="modedepaiement" class="java.lang.String"/>
+	<field name="designation" class="java.lang.String"/>
+	<field name="numero" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -26,7 +24,7 @@
 		<band height="172" splitType="Stretch">
 			<image>
 				<reportElement x="60" y="0" width="450" height="160" uuid="27524aa9-bf81-48ae-af66-3bd28a604dfa"/>
-				<imageExpression><![CDATA["Entete_Lettre_CCL.png"]]></imageExpression>
+				<imageExpression><![CDATA["static/Entete_Lettre_CCL.png"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="-5" y="162" width="561" height="1" uuid="b537d172-1634-4379-bac4-9d581d2a0446"/>
@@ -73,22 +71,22 @@
 			<textField isBlankWhenNull="true">
 				<reportElement isPrintRepeatedValues="false" x="80" y="22" width="200" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="4f2c583f-067b-4e66-8a3c-36731c2cbe48"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{denomination}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{denomination}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement isPrintRepeatedValues="false" x="80" y="43" width="200" height="23" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="cc5325f3-11ea-49e1-808f-82bd568500d5"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{telephone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{telephone}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement isPrintRepeatedValues="false" x="80" y="66" width="200" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="996ef97c-f772-4fe0-9e95-a84bb8341a87"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement isPrintRepeatedValues="false" x="80" y="87" width="200" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="2caa6a95-7502-4751-9b3e-2245f125d50c"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{adresse}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{adresse}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement isPrintRepeatedValues="false" x="280" y="0" width="120" height="22" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="ca20dea3-ff4d-4e28-aefa-a1c43a72c1f9"/>
@@ -151,105 +149,83 @@
 				<text><![CDATA[Date : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="-10" y="158" width="110" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="2c2bdce6-4724-4bce-a647-def8f54c35fc"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Mode de paiement :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="-10" y="179" width="111" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="459f2a8b-472a-4fa7-80fa-35be8d09cf98"/>
+				<reportElement isPrintRepeatedValues="false" x="-9" y="180" width="111" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="459f2a8b-472a-4fa7-80fa-35be8d09cf98"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total en ariary : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="-10" y="199" width="111" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="238fa40b-38bb-47f6-9e56-69857eb9b95c"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Acompte versé :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="-10" y="220" width="111" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="b396be3c-6349-4a5d-b47e-9f38932b99e9"/>
+				<reportElement isPrintRepeatedValues="false" x="-10" y="160" width="111" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="b396be3c-6349-4a5d-b47e-9f38932b99e9"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Remise : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="-10" y="240" width="111" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="8fd42991-1caa-49f3-97ba-c00c30b934e8"/>
+				<reportElement isPrintRepeatedValues="false" x="-10" y="217" width="330" height="19" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="c99d1863-f026-4918-8890-cf23522907e3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Reste à payer :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="-10" y="260" width="330" height="19" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="c99d1863-f026-4918-8890-cf23522907e3"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Arrêtée la présente facture à la somme de (Ariary) :]]></text>
+				<text><![CDATA[Arrêtée le présent contrat à la somme de (Ariary) :]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="101" y="179" width="159" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="2f386574-126b-42c9-bb46-80d0877289eb"/>
+				<reportElement isPrintRepeatedValues="false" x="98" y="180" width="159" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="2f386574-126b-42c9-bb46-80d0877289eb"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{somme}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{somme}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="101" y="200" width="159" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="96683c05-5724-49b5-aa99-b92c85d5fc41"/>
+				<reportElement isPrintRepeatedValues="false" x="101" y="160" width="159" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="5bb7b690-348a-4571-9b02-4b73e752fa20"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{acompte}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="101" y="220" width="159" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="5bb7b690-348a-4571-9b02-4b73e752fa20"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{remise}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="100" y="240" width="160" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="46380d25-872e-4269-b86b-1e286937759b"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{resteapayer}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{remise}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement isPrintRepeatedValues="false" x="100" y="135" width="160" height="23" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="b61191d5-1b8a-466b-a5df-90871e7666c5"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dateDuJour}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{dateDuJour}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="-10" y="280" width="566" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="26c8bdac-6c93-4202-bb04-fec246525d20"/>
+				<reportElement isPrintRepeatedValues="false" x="-10" y="238" width="360" height="27" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="26c8bdac-6c93-4202-bb04-fec246525d20"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{montantEnLettre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{montantEnLettre}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement isPrintRepeatedValues="false" x="380" y="138" width="130" height="122" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="9b82a1cf-9a2e-45d9-bc21-75e1340ef065"/>
-				<imageExpression><![CDATA["qrCodeFacture/QRCode.png"]]></imageExpression>
+				<reportElement x="341" y="119" width="180" height="137" uuid="178ed62e-0407-453d-aeb2-f73e89a70e54"/>
+				<imageExpression><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
+new com.google.zxing.qrcode.QRCodeWriter().encode(
+$P{reff},
+com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 			</image>
-			<textField>
-				<reportElement isPrintRepeatedValues="false" x="101" y="158" width="100" height="21" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="ad885a63-9495-499c-9a9e-0f64de6d2bfe"/>
+			<staticText>
+				<reportElement x="118" y="269" width="90" height="21" uuid="08813c5f-39e6-4119-9d17-242ebd3b0941"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Evènement du : ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="210" y="270" width="93" height="21" uuid="a30f2f9b-7c4b-430a-87db-2441615c00da"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{modedepaiement}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{dateDebutReservation}]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="336" y="271" width="120" height="20" uuid="34074750-ba8f-4fbe-9187-faa2829c7cbb"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{dateFinReservation}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="307" y="269" width="31" height="20" uuid="efc6ec95-b83e-4a32-a587-03e1a35b8009"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[  au]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="50" splitType="Stretch">
+		<band height="55" splitType="Stretch">
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="131" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="434f2e8f-4df8-4f95-8df7-79578ce8adb4"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[TYPE DE L'EVENEMENT]]></text>
-			</staticText>
-			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="131" y="0" width="270" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="18554fbb-5009-4994-986f-771cc01e54ad"/>
+				<reportElement isPrintRepeatedValues="false" x="20" y="0" width="270" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="18554fbb-5009-4994-986f-771cc01e54ad"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -261,21 +237,8 @@
 				</textElement>
 				<text><![CDATA[INFRASTRUCTURES CONCERNES]]></text>
 			</staticText>
-			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="401" y="0" width="143" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="6564120d-951a-4b11-a2b8-2ec6b9a3270e"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[MISE EN PLACE]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="131" y="30" width="270" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="62c91ee0-2a12-468c-8be2-4de0be2aa00a"/>
+				<reportElement x="20" y="30" width="270" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="62c91ee0-2a12-468c-8be2-4de0be2aa00a"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -285,36 +248,40 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{lieuUtilise}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{designation}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="401" y="30" width="143" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="24e550f4-03e3-4cb9-bd52-d90f451e5ba6"/>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="290" y="0" width="230" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="679420b8-9e5a-4eb4-a5d3-d3eaaaeab459"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dateDebutReservation}]]></textFieldExpression>
-			</textField>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO]]></text>
+			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="30" width="131" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="505826ba-7e80-4ea0-af46-c40a9610baca"/>
+				<reportElement x="290" y="30" width="230" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="b4b10110-732c-4e74-ae90-d33993139e59"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{typeEvenement}]]></textFieldExpression>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
 		<band height="802" splitType="Stretch">
 			<staticText>
-				<reportElement x="160" y="0" width="241" height="23" uuid="a08c0dea-3d78-4d35-88ff-003ebb9fef05"/>
+				<reportElement x="160" y="11" width="241" height="23" uuid="a08c0dea-3d78-4d35-88ff-003ebb9fef05"/>
 				<textElement>
 					<font size="15" isBold="true"/>
 				</textElement>

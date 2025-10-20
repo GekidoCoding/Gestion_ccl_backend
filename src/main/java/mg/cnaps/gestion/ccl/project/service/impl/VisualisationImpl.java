@@ -50,7 +50,6 @@ public class VisualisationImpl {
         mouvementClasseDto.setPeriodeFin(TimestampUtil.formatTimestamp(mouvement.getPeriodeFin()));
 
         List<HistoFacture> histoFactures = histoFactureService.getHistoByMouvementId(mouvement.getId());
-        System.out.println("factures:"+histoFactures.size());
         List<HistoFactureDto> histoFactureDtos = new ArrayList<>();
 
         for (HistoFacture hf : histoFactures){

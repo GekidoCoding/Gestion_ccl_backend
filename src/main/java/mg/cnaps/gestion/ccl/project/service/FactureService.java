@@ -66,5 +66,11 @@ public interface FactureService extends GenericService<Facture, String> {
 
     byte[] buildFacturePdfWithFacture(Facture newFacture) throws JRException;
 
-    void sendEmailForFactureWithPdf(String idFacture, String[] destinataires) throws JRException, MessagingException;
+    byte[] buildContratPdf(String idFacture) throws JRException;
+
+    void sendEmailForFactureWithPdf(String idFacture, String[] destinataires) ;
+
+    void sendEmailForPaiementWithPdf(String idPaiement, String[] destinataires);
+
+    void sendEmailForContratWithPdf(String idFacture, String[] destinataires);
 }

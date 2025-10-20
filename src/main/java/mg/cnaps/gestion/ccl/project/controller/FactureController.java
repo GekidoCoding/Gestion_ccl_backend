@@ -80,8 +80,6 @@ public class FactureController extends GenericController<Facture , String ,Factu
         }
     }
 
-
-
     private ResponseEntity<byte[]> buildPdfResponse(byte[] pdfBytes, String filename) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + filename)
@@ -116,11 +114,11 @@ public class FactureController extends GenericController<Facture , String ,Factu
 //
 //    }
 
-    @PostMapping("/sendEmail/facture")
-    public ResponseEntity<?> sendEmailFactureToClientWithCopy(
+    @PostMapping("/sendEmail/paiement")
+    public ResponseEntity<?> sendEmailPaiementToClientWithCopy(
             @RequestBody EmailRequest emailRequest
-          ) {
-        String idFacture= emailRequest.getIdFacture();
+    ) {
+        String idPaiemetnt= emailRequest.getId();
         String[]destinataires = emailRequest.getDestinataires();
         if (destinataires == null || destinataires.length == 0) {
             return ResponseEntity.badRequest().body(
@@ -128,18 +126,32 @@ public class FactureController extends GenericController<Facture , String ,Factu
             );
         }
         try {
-            service.sendEmailForFactureWithPdf(idFacture, destinataires);
+            service.sendEmailForPaiementWithPdf(idPaiemetnt, destinataires);
             return ResponseEntity.ok(Map.of(
                     "status", 200,
                     "message", "Email envoyé avec succès aux destinataires."));
-        } catch (JRException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Erreur lors de la génération du PDF : " + e.getMessage(),
+                    .body(new ErrorResponse("Une erreur est survenue : " + e.getMessage(),
                             HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        } catch (MessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Erreur lors de l'envoi de l'email : " + e.getMessage(),
-                            HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+    @PostMapping("/sendEmail/contrat")
+    public ResponseEntity<?> sendEmailContratToClientWithCopy(
+            @RequestBody EmailRequest emailRequest
+    ) {
+        String idFacture= emailRequest.getId();
+        String[]destinataires = emailRequest.getDestinataires();
+        if (destinataires == null || destinataires.length == 0) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorResponse("Au moins un destinataire doit être fourni.", HttpStatus.BAD_REQUEST.value())
+            );
+        }
+        try {
+            service.sendEmailForContratWithPdf(idFacture, destinataires);
+            return ResponseEntity.ok(Map.of(
+                    "status", 200,
+                    "message", "Email envoyé avec succès aux destinataires."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Une erreur est survenue : " + e.getMessage(),
@@ -147,6 +159,30 @@ public class FactureController extends GenericController<Facture , String ,Factu
         }
     }
 
+    @PostMapping("/sendEmail/facture")
+    public ResponseEntity<?> sendEmailFactureToClientWithCopy(
+            @RequestBody EmailRequest emailRequest
+          ) {
+
+        String idFacture= emailRequest.getId();
+        String[]destinataires = emailRequest.getDestinataires();
+        if (destinataires == null || destinataires.length == 0) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorResponse("Au moins un destinataire doit être fourni.", HttpStatus.BAD_REQUEST.value())
+            );
+        }
+
+        try {
+            service.sendEmailForFactureWithPdf(idFacture, destinataires);
+            return ResponseEntity.ok(Map.of(
+                    "status", 200,
+                    "message", "Email envoyé avec succès aux destinataires."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Une erreur est survenue : " + e.getMessage(),
+                            HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
 
     private ResponseEntity<byte[]> getBuildFacture(String idFacture) throws JRException {
         return buildPdfResponse(
@@ -174,6 +210,17 @@ public class FactureController extends GenericController<Facture , String ,Factu
     public ResponseEntity<byte[]> generateFacture(@PathVariable("idPaiement") String idPaiement ) throws JRException {
         byte[] pdfBytes = this.service.getBytePdfPaiement(idPaiement);
         return buildPdfResponse(pdfBytes, "facture.pdf");
+    }
+    @PostMapping("/export-contrat/{idFacture}")
+    public ResponseEntity<byte[]> generateContrat(@PathVariable("idFacture") String idFacture ) throws JRException {
+        try {
+            byte[] pdfBytes = this.service.buildContratPdf(idFacture);
+            return buildPdfResponse(pdfBytes, "contrat.pdf");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
 
     @GetMapping("/dto/{id}")
