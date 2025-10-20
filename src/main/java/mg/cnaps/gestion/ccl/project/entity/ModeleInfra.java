@@ -27,7 +27,6 @@ public class ModeleInfra {
         }
     }
 
-
     @CheckField
     @Size(max = 255)
     @Column(name = "NOM_MDL_INFRA")
@@ -37,5 +36,9 @@ public class ModeleInfra {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "ID_CAT_INFRA", nullable = false)
     private CategorieInfra catInfra;
+
+    @NotNull
+    @JoinColumn(name = "COULEUR", nullable = false)
+    private String couleur;
 
 }

@@ -2,7 +2,6 @@
 <!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Proforma" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="af7be066-7efb-45b1-a5f4-7f8963e058f2">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-
 	<parameter name="dateFacture" class="java.lang.String"/>
 	<parameter name="denomination" class="java.lang.String"/>
 	<parameter name="cin" class="java.lang.String"/>
@@ -14,36 +13,33 @@
 	<parameter name="dateDebutReservation" class="java.lang.String"/>
 	<parameter name="dateFinReservation" class="java.lang.String"/>
 	<parameter name="montantEnLettre" class="java.lang.String"/>
-    <parameter name="avanceRemise" class="java.lang.String"/>
-    <parameter name="resteRemise" class="java.lang.String"/>
-
-    <queryString>
-        <![CDATA[]]>
-    </queryString>
-
-    <field name="designation" class="java.lang.String"/>
-    <field name="prixUnitaire" class="java.lang.Double"/>
-    <field name="coeffQuantite" class="java.lang.Double"/>
-    <field name="prixTotal" class="java.lang.Double"/>
-     <field name="frequence" class="java.lang.String"/>
-
+	<parameter name="avanceRemise" class="java.lang.String"/>
+	<parameter name="resteRemise" class="java.lang.String"/>
+	<parameter name="remise" class="java.lang.Double"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="designation" class="java.lang.String"/>
+	<field name="prixUnitaire" class="java.lang.Double"/>
+	<field name="coeffQuantite" class="java.lang.Double"/>
+	<field name="prixTotal" class="java.lang.Double"/>
+	<field name="frequence" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="138" splitType="Stretch">
 			<image>
-				<reportElement x="62" y="-10" width="419" height="140" uuid="a12b951c-5b7a-4d68-9544-8152387e6a65"/>
+				<reportElement x="75" y="-10" width="419" height="140" uuid="a12b951c-5b7a-4d68-9544-8152387e6a65"/>
 				<imageExpression><![CDATA["static/Entete_Lettre_CCL.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="130" splitType="Stretch">
-		    <line>
-                <reportElement x="30" y="0" width="500" height="1" uuid="12345678-1234-1234-1234-123456789abc"/>
-            </line>
-
+			<line>
+				<reportElement x="30" y="0" width="500" height="1" uuid="12345678-1234-1234-1234-123456789abc"/>
+			</line>
 			<staticText>
 				<reportElement x="400" y="5" width="100" height="20" uuid="5bc2355f-3bc1-4467-88fc-dd5927fc012e"/>
 				<textElement verticalAlignment="Middle">
@@ -52,15 +48,15 @@
 				<text><![CDATA[Antananarivo , le]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="480" y="5" width="110" height="20" uuid="b399e7b8-214b-4f51-84a4-023a785f256e"/>
+				<reportElement x="481" y="5" width="110" height="20" uuid="b399e7b8-214b-4f51-84a4-023a785f256e"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{dateFacture}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-        				<reportElement x="400" y="22" width="221" height="20" uuid="0daf1f17-72b2-42bd-b0a7-9945e0210d88"/>
-        				<textElement verticalAlignment="Middle"/>
-        				<textFieldExpression><![CDATA[$P{denomination}]]></textFieldExpression>
-        			</textField>
+				<reportElement x="399" y="23" width="221" height="20" uuid="0daf1f17-72b2-42bd-b0a7-9945e0210d88"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{denomination}]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement x="180" y="45" width="240" height="34" uuid="e1b88222-b92e-49f0-8d4c-9bcb09977324"/>
 				<textElement>
@@ -69,51 +65,49 @@
 				<text><![CDATA[FACTURE PROFORMA]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="75" width="289" height="20" uuid="ed2c69d1-7142-49c5-b481-6c98c88689f1"/>
+				<reportElement x="80" y="76" width="289" height="20" uuid="ed2c69d1-7142-49c5-b481-6c98c88689f1"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{reff}]]></textFieldExpression>
 			</textField>
 			<staticText>
-                <reportElement x="0" y="72" width="78" height="25" uuid="47a0b1c0-a016-4798-bb46-362829559b60"/>
-                <textElement verticalAlignment="Middle">
-                    <font size="12"/>
-                </textElement>
-                <text><![CDATA[Proforma N° : ]]></text>
-            </staticText>
-
-
+				<reportElement x="1" y="74" width="78" height="25" uuid="47a0b1c0-a016-4798-bb46-362829559b60"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Proforma N° : ]]></text>
+			</staticText>
 			<staticText>
-				<reportElement x="140" y="100" width="90" height="21" uuid="6f1c256f-e463-40d7-8462-e246f25af82f"/>
+				<reportElement x="131" y="101" width="90" height="21" uuid="6f1c256f-e463-40d7-8462-e246f25af82f"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Evènement du : ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="220" y="101" width="120" height="21" uuid="a98b876e-7c43-4c0d-ba20-eeed3dea96a7"/>
+				<reportElement x="223" y="102" width="93" height="21" uuid="a98b876e-7c43-4c0d-ba20-eeed3dea96a7"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{dateDebutReservation}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="332" y="101" width="120" height="20" uuid="99ae55f3-cb35-4df0-8acc-7309185be89e"/>
+				<reportElement x="349" y="103" width="120" height="20" uuid="99ae55f3-cb35-4df0-8acc-7309185be89e"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{dateFinReservation}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="315" y="100" width="31" height="20" uuid="b449ec37-fcec-4ddd-8d2d-8b463b7d3509"/>
+				<reportElement x="320" y="101" width="31" height="20" uuid="b449ec37-fcec-4ddd-8d2d-8b463b7d3509"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[au]]></text>
+				<text><![CDATA[  au]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="50" splitType="Stretch">
+		<band height="55" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="30" width="231" height="20" isRemoveLineWhenBlank="true" uuid="1da143f8-645a-4f06-937c-c88c4c519ca3">
+				<reportElement x="0" y="30" width="161" height="20" isRemoveLineWhenBlank="true" uuid="1da143f8-645a-4f06-937c-c88c4c519ca3">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6f66f211-76cc-427e-a3a2-19908679a324"/>
 					<property name="com.jaspersoft.studio.unit.tabStopWidth" value="px"/>
 				</reportElement>
@@ -123,14 +117,14 @@
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font pdfEncoding=""/>
 					<paragraph lineSpacingSize="0.0" tabStopWidth="40"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{designation}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="231" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="8268a2b1-6d15-4ec3-8dac-a2e69634e9dc">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="161" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="8268a2b1-6d15-4ec3-8dac-a2e69634e9dc">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6f66f211-76cc-427e-a3a2-19908679a324"/>
 				</reportElement>
 				<box>
@@ -144,40 +138,38 @@
 				</textElement>
 				<text><![CDATA[Designation]]></text>
 			</staticText>
-
 			<textField isBlankWhenNull="true">
-                <reportElement x="161" y="30" width="70" height="20" isRemoveLineWhenBlank="true" uuid="1da144f8-645a-4f06-937c-c88c45129ca3">
-                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6f66f211-76cc-427e-a3a2-19908679a324"/>
-                    <property name="com.jaspersoft.studio.unit.tabStopWidth" value="px"/>
-                </reportElement>
-                <box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                </box>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font pdfEncoding=""/>
-                    <paragraph lineSpacingSize="0.0" tabStopWidth="40"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{frequence}]]></textFieldExpression>
-            </textField>
-            <staticText>
-                <reportElement isPrintRepeatedValues="false" x="161" y="0" width="70" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="8268a2b1-6d15-4ec3-8dac-a2e69634e9dc">
-                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7l566f211-76cc-427e-a3a2-20008779a324"/>
-                </reportElement>
-                <box>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
-                    <font isBold="true"/>
-                </textElement>
-                <text><![CDATA[Frequence]]></text>
-            </staticText>
-
+				<reportElement x="161" y="30" width="70" height="20" isRemoveLineWhenBlank="true" uuid="1da144f8-645a-4f06-937c-c88c45129ca3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6f66f211-76cc-427e-a3a2-19908679a324"/>
+					<property name="com.jaspersoft.studio.unit.tabStopWidth" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfEncoding=""/>
+					<paragraph lineSpacingSize="0.0" tabStopWidth="40"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frequence}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="161" y="0" width="70" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="8268a2b1-6d15-4ec3-8dac-a2e69634e9dc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7l566f211-76cc-427e-a3a2-20008779a324"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Frequence]]></text>
+			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="231" y="30" width="85" height="20" isRemoveLineWhenBlank="true" uuid="cfb98403-3d37-4695-b651-09d18a8e807b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aac04734-257c-4c5e-bebb-dc71a655b640"/>
@@ -208,8 +200,6 @@
 				</textElement>
 				<text><![CDATA[Nombre/Qté]]></text>
 			</staticText>
-
-
 			<textField isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="316" y="30" width="124" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="7a8c1172-4e0f-429f-a138-33aa13ad20c9">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cb13ed07-7a93-4845-9057-e11ab28557d2"/>
@@ -319,11 +309,11 @@
 				<text><![CDATA[50% à payer 72 heures avant l'occupation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="130" width="71" height="21" uuid="923f5397-aabe-4742-b314-a225c9ba59ae"/>
+				<reportElement x="0" y="129" width="71" height="21" uuid="923f5397-aabe-4742-b314-a225c9ba59ae"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[- Espèces]]></text>
+				<text><![CDATA[- Espèces ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="150" width="270" height="21" uuid="d755e184-b665-4294-938a-ac9e3a51e7b6"/>
@@ -333,14 +323,14 @@
 				<text><![CDATA[- Virement : a libellé au nom de l'ASSOCIATION HIFAMPITA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="170" width="281" height="21" uuid="b5919ac0-79c4-451d-9079-562f4d28a338"/>
+				<reportElement x="0" y="173" width="281" height="21" uuid="b5919ac0-79c4-451d-9079-562f4d28a338"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[- Chèque : mettre à l'ordre de l'ASSOCIATION HIFAMPITA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="191" width="550" height="21" uuid="362d7a6b-2b7a-401b-a2ea-e120f545fc1b"/>
+				<reportElement x="0" y="197" width="550" height="21" uuid="362d7a6b-2b7a-401b-a2ea-e120f545fc1b"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
@@ -365,6 +355,43 @@
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{somme}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="395" y="60" width="180" height="137" uuid="178ed62e-0407-453d-aeb2-f73e89a70e54"/>
+				<imageExpression><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
+new com.google.zxing.qrcode.QRCodeWriter().encode(
+$P{reff},
+com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="161" y="0" width="70" height="28" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="ec179fa9-39b3-4178-9fba-2eecdcf624d5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7l566f211-76cc-427e-a3a2-20008779a324"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Remise de :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="230" y="0" width="86" height="28" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="68ac0cc6-c463-464d-8653-9dc232978ddf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cb13ed07-7a93-4845-9057-e11ab28557d2"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<paragraph lineSpacingSize="0.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{remise}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>

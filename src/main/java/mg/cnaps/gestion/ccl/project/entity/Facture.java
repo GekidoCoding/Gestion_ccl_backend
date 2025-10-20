@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.Random;
 
 
 @Getter
@@ -57,8 +59,12 @@ public class Facture {
     @Column(name = "TOTAL_DU")
     private Double totalDu;
 
+
+
+
     public String getRefFacture() {
         String year = String.valueOf(java.time.Year.now().getValue());
+        String month = String.valueOf(LocalDate.now().getMonth().getValue());
 
         String factureId = (this.id != null) ? this.id.replace("FAC-", "") : "";
 
@@ -69,10 +75,10 @@ public class Facture {
                 clientId = rawClientId.replace("CLT-", "");
             }
         }
-
-        return year + "-" + factureId + "-" + clientId;
+        Random random = new Random();
+        int number= 10000000 + random.nextInt(90000000);
+        return month+"-"+ year + "-" + factureId.replaceAll("0","") + "-" + clientId.replaceAll("0","")+number;
     }
-
 
     public String getDhCreation() {
       return TimestampUtil.formatTimestamp(dhCreation);

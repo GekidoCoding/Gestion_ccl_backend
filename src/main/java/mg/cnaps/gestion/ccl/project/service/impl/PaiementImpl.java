@@ -4,17 +4,22 @@ import mg.cnaps.gestion.ccl.framework.jpa.core.service.implementation.GenericSer
 import mg.cnaps.gestion.ccl.project.config.CclPropertyService;
 import mg.cnaps.gestion.ccl.project.entity.Facture;
 import mg.cnaps.gestion.ccl.project.entity.Paiement;
+import mg.cnaps.gestion.ccl.project.entity.dto.mouvement.MouvementDto;
 import mg.cnaps.gestion.ccl.project.exception.EtatNotValidException;
 import mg.cnaps.gestion.ccl.project.exception.NoResteException;
 import mg.cnaps.gestion.ccl.project.repository.EtatRepo;
 import mg.cnaps.gestion.ccl.project.repository.FactureRepo;
 import mg.cnaps.gestion.ccl.project.repository.PaiementRepo;
+import mg.cnaps.gestion.ccl.project.service.FactureService;
 import mg.cnaps.gestion.ccl.project.service.PaiementService;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +33,7 @@ public class PaiementImpl extends GenericServiceImpl<Paiement, String , Paiement
         this.cclPropertyService = cclPropertyService;
         this.factureRepo = factureRepo;
         this.etatRepo = etatRepo;
+
     }
     @Override
     public List<Paiement> findPaiementByFacture_Id(String factureId) {
@@ -63,6 +69,7 @@ public class PaiementImpl extends GenericServiceImpl<Paiement, String , Paiement
             }else{
                 paiement.setMonnaie(0.0);
             }
+            paiement.setReste(reste);
             paiement.setDatePaiement(Timestamp.valueOf(LocalDateTime.now()));
             if(reste>0){
                 return super.save(paiement);
@@ -86,6 +93,8 @@ public class PaiementImpl extends GenericServiceImpl<Paiement, String , Paiement
         }
         repository.deleteById(id);
     }
+
+
 
 
 

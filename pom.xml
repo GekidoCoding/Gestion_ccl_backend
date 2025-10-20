@@ -15,19 +15,20 @@
 	<artifactId>ccl</artifactId>
 	<version>0.0.1</version>
 	<name>gestion-ccl</name>
-	<description>Gestion CCL CNaPS </description>
+	<description>Gestion CCL CNaPS</description>
 
 	<properties>
 		<java.version>11</java.version>
+		<zxing.version>3.5.1</zxing.version>
 	</properties>
 
 	<dependencies>
-
 		<!-- Spring Web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
@@ -39,7 +40,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<!-- PostgreSQL JDBC driver -->
+		<!-- Oracle JDBC -->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
@@ -54,13 +55,26 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- ZXing -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${zxing.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>${zxing.version}</version>
+		</dependency>
+
+		<!-- JasperReports -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>6.19.1</version>
 		</dependency>
 
-		<!-- Validation -->
+		<!-- Validation API -->
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
@@ -74,7 +88,7 @@
 			<version>3.1.1</version>
 		</dependency>
 
-		<!-- Devtools -->
+		<!-- Spring Boot Devtools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -82,14 +96,11 @@
 			<optional>true</optional>
 		</dependency>
 
-
+		<!-- Spring WebFlux -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
-
-
-
 
 		<!-- Test -->
 		<dependency>
@@ -98,10 +109,16 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Mail -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 			<version>2.6.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.3.0</version>
 		</dependency>
 
 	</dependencies>
@@ -109,7 +126,6 @@
 	<build>
 		<finalName>gestion-ccl</finalName>
 		<plugins>
-
 			<!-- Compiler plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -133,8 +149,6 @@
 					</image>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
-
 </project>

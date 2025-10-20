@@ -27,12 +27,14 @@ mg\cnaps\gestion\ccl\project\controller\InfrastructureController.class
 mg\cnaps\gestion\ccl\project\repository\EtatRepo.class
 mg\cnaps\gestion\ccl\project\repository\MouvementInfraRepo.class
 mg\cnaps\gestion\ccl\project\controller\TypeNotificationController.class
+mg\cnaps\gestion\ccl\project\entity\dto\infrastructure\InfrastructureVisuDto.class
 mg\cnaps\gestion\ccl\project\entity\Mouvement.class
 mg\cnaps\gestion\ccl\project\util\JasperUtil.class
 mg\cnaps\gestion\ccl\project\controller\DashboardController.class
 mg\cnaps\gestion\ccl\project\repository\AgentRepo.class
 mg\cnaps\gestion\ccl\project\service\DashboardService.class
 mg\cnaps\gestion\ccl\project\entity\ModeleInfra.class
+mg\cnaps\gestion\ccl\framework\excel\annotation\ExcelColorField.class
 mg\cnaps\gestion\ccl\project\service\HistoriqueMvtService.class
 mg\cnaps\gestion\ccl\project\service\MouvementService.class
 mg\cnaps\gestion\ccl\project\service\impl\DirectionImpl.class
@@ -61,6 +63,7 @@ mg\cnaps\gestion\ccl\project\controller\MouvementController.class
 mg\cnaps\gestion\ccl\project\repository\NotificationRepo.class
 mg\cnaps\gestion\ccl\project\controller\MouvementInfraController.class
 mg\cnaps\gestion\ccl\project\repository\InfrastructureRepo.class
+mg\cnaps\gestion\ccl\project\entity\dto\paiement\PaiementDto.class
 mg\cnaps\gestion\ccl\project\entity\existant\UserToken.class
 mg\cnaps\gestion\ccl\project\service\impl\HistoriqueInfraImpl.class
 mg\cnaps\gestion\ccl\project\controller\TypeMouvementController.class
@@ -85,10 +88,12 @@ mg\cnaps\gestion\ccl\project\service\impl\HistoFactureImpl.class
 mg\cnaps\gestion\ccl\project\repository\GestionnaireRepo.class
 mg\cnaps\gestion\ccl\project\controller\PaiementController.class
 mg\cnaps\gestion\ccl\project\entity\Gestionnaire.class
+mg\cnaps\gestion\ccl\project\entity\dto\historique\HistoriqueMvtDto.class
 mg\cnaps\gestion\ccl\project\service\HistoriqueInfraService.class
 mg\cnaps\gestion\ccl\project\controller\FrequenceController.class
 mg\cnaps\gestion\ccl\project\service\DrhServiceService.class
 mg\cnaps\gestion\ccl\project\util\Doubleutil.class
+mg\cnaps\gestion\ccl\framework\excel\annotation\ExcelColumn.class
 mg\cnaps\gestion\ccl\project\repository\TypeMouvementRepo.class
 mg\cnaps\gestion\ccl\project\controller\config\ConfigController.class
 mg\cnaps\gestion\ccl\project\exception\FrequenceNotFoundException.class
@@ -105,6 +110,7 @@ mg\cnaps\gestion\ccl\project\controller\ModeleInfraController.class
 mg\cnaps\gestion\ccl\project\service\impl\MouvementInfraImpl.class
 mg\cnaps\gestion\ccl\framework\jpa\core\generator\IdGeneratorUtil.class
 mg\cnaps\gestion\ccl\project\controller\DrhServiceController.class
+mg\cnaps\gestion\ccl\project\service\impl\VisualisationImpl.class
 mg\cnaps\gestion\ccl\framework\general\error\ErrorResponse.class
 mg\cnaps\gestion\ccl\project\entity\dto\mouvement\MouvementDto.class
 mg\cnaps\gestion\ccl\project\exception\gestion\GestionError.class
@@ -118,6 +124,7 @@ mg\cnaps\gestion\ccl\project\repository\HistoriqueInfraRepo.class
 mg\cnaps\gestion\ccl\project\controller\ClientController.class
 mg\cnaps\gestion\ccl\project\service\CategorieInfraService.class
 mg\cnaps\gestion\ccl\project\repository\ModeleInfraRepo.class
+mg\cnaps\gestion\ccl\project\entity\dto\mouvement\MouvementVisualisationDto.class
 mg\cnaps\gestion\ccl\project\repository\CategorieInfraRepo.class
 mg\cnaps\gestion\ccl\project\exception\NoResteException.class
 mg\cnaps\gestion\ccl\project\controller\NotificationController.class
@@ -130,6 +137,7 @@ mg\cnaps\gestion\ccl\project\repository\FrequenceRepo.class
 mg\cnaps\gestion\ccl\project\repository\FactureRepo.class
 mg\cnaps\gestion\ccl\project\service\InfrastructureService.class
 mg\cnaps\gestion\ccl\project\controller\FactureController.class
+mg\cnaps\gestion\ccl\project\entity\dto\historique\HistoFactureDto.class
 mg\cnaps\gestion\ccl\project\exception\EtatNotFoundException.class
 mg\cnaps\gestion\ccl\project\controller\ModePaiementController.class
 mg\cnaps\gestion\ccl\project\service\GestionnaireService.class
@@ -139,6 +147,7 @@ mg\cnaps\gestion\ccl\project\controller\DirectionController.class
 mg\cnaps\gestion\ccl\project\repository\ClientRepo.class
 mg\cnaps\gestion\ccl\project\service\LocalisationService.class
 mg\cnaps\gestion\ccl\project\entity\Facture.class
+mg\cnaps\gestion\ccl\project\entity\dto\facture\FactureDtoVisualisation.class
 mg\cnaps\gestion\ccl\project\repository\InfraTarifRepo.class
 mg\cnaps\gestion\ccl\project\service\schedule\ScheduleNotificationService.class
 mg\cnaps\gestion\ccl\project\exception\UnauthorizedException.class
@@ -149,6 +158,7 @@ mg\cnaps\gestion\ccl\project\service\EmailService.class
 mg\cnaps\gestion\ccl\project\controller\EtatController.class
 mg\cnaps\gestion\ccl\project\entity\TypeNotification.class
 mg\cnaps\gestion\ccl\project\service\impl\NotificationImpl.class
+mg\cnaps\gestion\ccl\framework\excel\service\GenericExcelService.class
 mg\cnaps\gestion\ccl\project\entity\CategorieInfra.class
 mg\cnaps\gestion\ccl\framework\jpa\conf\MapperConfig.class
 mg\cnaps\gestion\ccl\project\service\ModePaiementService.class

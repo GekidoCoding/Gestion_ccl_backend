@@ -32,7 +32,6 @@ public class EmailService {
         helper.setBcc(recipients);
 
         javamailSender.send(message);
-        System.out.println(" Email envoyé à " + recipients.length + " destinataires.");
     }
 
     public void sendEmailWithPdfBytes(String[] recipients, String subject, String text, byte[] pdfBytes, String fileName) throws MessagingException {

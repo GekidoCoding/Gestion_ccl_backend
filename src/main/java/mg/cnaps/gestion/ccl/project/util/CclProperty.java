@@ -89,6 +89,9 @@ public class CclProperty {
     @Value("${facture.reelle.export.path}")
     private String factureReelleExportPath;
 
+    @Value("${contrat.export.path}")
+    private String contratExportPath;
+
 
     @Value("${frequence.nuit.id}")
     private String frequenceNuitId;

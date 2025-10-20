@@ -52,5 +52,13 @@ public class Mouvement {
     @JsonManagedReference
     private List<MouvementInfra> mouvementInfras;
 
+    @Column(name = "OBSERVATION")
+    private String observation ;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_ETAT")
+    private Etat etat;
+
+
 
 }

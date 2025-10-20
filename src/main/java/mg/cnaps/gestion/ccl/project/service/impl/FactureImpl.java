@@ -19,7 +19,6 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -45,6 +44,40 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
         this.gestionnaireUtil = gestionnaireUtil;
         this.emailService = emailService;
     }
+    @Override
+    public void delete(String factureId) {
+        try{
+            List<Paiement> paiements = this.paiementService.findPaiementByFacture_Id(factureId);
+            for (Paiement paiement : paiements) {
+                this.paiementService.delete(paiement.getId());
+            }
+            List<HistoFacture> histoFactures = this.histoFactureRepo.getHistoFactureByFacture_Id(factureId);
+            histoFactureRepo.deleteAll(histoFactures);
+            this.repository.deleteById(factureId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public List<Facture> findAll(){
+        return this.repository.findAll().stream().filter( f-> !Objects.equals(f.getEtat().getCode(), cclPropertyService.getInactifCode())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Facture> getFacturesByMouvement_Id_findAll(String mouvementId){
+        List<Facture> factures = this.findAll();
+        List<Facture> newFactures = new ArrayList<>();
+        for (Facture facture : factures) {
+            if(facture.getMouvement().getId().equals(mouvementId)){
+                newFactures.add(facture);
+            }
+        }
+        return newFactures;
+    }
+
 
     @Override
     public List<FactureDto> getFacturesReellePayeByMouvement_Id(String mouvementId) {
@@ -68,6 +101,20 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public byte[] getBytePdfPaiement(String idPaiement) {
+        try{
+            Paiement paiement = this.paiementService.findById(idPaiement);
+            JasperReport jasperReport = this.loadReportTemplate(cclPropertyService.getFactureReelleExportPath());
+            Map<String, Object> params = this.buildReportParametersRelle(paiement);
+            List<Map<String, Object>> dataList = this.buildReportData(new MouvementDto(paiement.getFacture().getMouvement()));
+            JasperPrint jasperPrint = this.fillReport(jasperReport, params, dataList);
+            return this.exportReportToPdf(jasperPrint);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+   }
 
     @Override
     public List<FactureDto> getFacturesByMouvement_Id(String mouvementId) {
@@ -132,13 +179,9 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
         facture = repository.save(facture);
         facture.setRefFacture(facture.getRefFacture());
         facture = repository.save(facture);
-        HistoFacture  histoFacture = new HistoFacture();
-        histoFacture.setFacture(facture);
-        histoFacture.setEtat(facture.getEtat());
-        histoFacture.setGestionnaire(gestionnaire);
-        histoFacture.setRefFacture(facture.getRefFacture());
-        histoFacture.setMontant(facture.getMontantTotal());
-        histoFacture.setDhAction(Timestamp.valueOf(LocalDateTime.now()));
+
+        HistoFacture histoFacture= this.getHistoFacture(facture , gestionnaire);
+
         histoFactureRepo.save(histoFacture);
 
         return facture;
@@ -171,16 +214,22 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
             }
         }
         if(isExist==null){
-            HistoFacture  histo = new HistoFacture();
-            histo.setFacture(facture);
-            histo.setEtat(facture.getEtat());
-            histo.setRefFacture(facture.getRefFacture());
-            histo.setMontant(facture.getMontantTotal());
-            histo.setGestionnaire(gestionnaire);
-            histo.setDhAction(Timestamp.valueOf(LocalDateTime.now()));
-            histoFactureRepo.save(histo);
+            HistoFacture histoFacture= this.getHistoFacture(facture , gestionnaire);
+            histoFactureRepo.save(histoFacture);
         }
         return facture;
+    }
+    private HistoFacture getHistoFacture(Facture facture , Gestionnaire gestionnaire){
+        HistoFacture  histoFacture = new HistoFacture();
+        histoFacture.setFacture(facture);
+        histoFacture.setEtat(facture.getEtat());
+        histoFacture.setRefFacture(facture.getRefFacture());
+        histoFacture.setMontant(facture.getMontantTotal());
+        histoFacture.setGestionnaire(gestionnaire);
+        histoFacture.setDhAction(Timestamp.valueOf(LocalDateTime.now()));
+        histoFacture.setTotalDu(facture.getTotalDu());
+        histoFacture.setRemise(facture.getRemise());
+        return histoFacture;
     }
 
     @Override
@@ -285,6 +334,7 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
         MouvementDto factureMouvement = new MouvementDto(facture.getMouvement());
 
         Map<String, Object> params = new HashMap<>();
+        params.put("dateDuJour", facture.getDhCreationNoHours());
         params.put("dateFacture", facture.getDhCreationNoHours());
         params.put("denomination", facture.getMouvement().getClient().getDesignationClient());
         params.put("cin", facture.getMouvement().getClient().getCin());
@@ -295,6 +345,7 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
         params.put("dateDebutReservation", factureMouvement.getPeriodeDebut());
         params.put("dateFinReservation", factureMouvement.getPeriodeFin());
         params.put("somme", facture.getTotalDu());
+        params.put("remise", facture.getRemise());
         params.put("montantEnLettre", Doubleutil.convert(facture.getTotalDu().longValue()));
         return params;
     }
@@ -324,6 +375,7 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
             );
             Map<String, Object> line = new HashMap<>();
             line.put("designation", detail.getInfrastructure().getNom() + " - " + detail.getInfrastructure().getNumero());
+            line.put("numero", detail.getInfrastructure().getNumero());
             line.put("coeffQuantite", duree);
             line.put("frequence", detail.getFrequence().getLibelle());
             line.put("prixUnitaire", tarifUnitaire);
@@ -370,23 +422,23 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
     @Override
     public byte[] buildFacturePdf( String idFacture) throws JRException {
         Facture newFacture = this.findById(idFacture);
-        return getBytes(newFacture);
+        return getBytes(newFacture ,  false);
 
     }
     @Override
     public byte[] buildFacturePdfWithFacture(Facture newFacture) throws JRException {
-        return getBytes(newFacture);
+        return getBytes(newFacture , false);
 
     }
 
-    private byte[] getBytes(Facture newFacture) throws JRException {
-        JasperReport jasperReport ;
-        if(newFacture.getEtat().getCode().equals(cclPropertyService.getProformaCode())){
-            jasperReport = this.loadReportTemplate(cclPropertyService.getFactureProformaExportPath());
-        }else {
-            jasperReport = this.loadReportTemplate(cclPropertyService.getFactureReelleExportPath());
-        }
+    @Override
+    public byte[] buildContratPdf(String idFacture) throws JRException {
+        Facture newFacture = this.findById(idFacture);
+        return getBytes(newFacture ,  true);
+    }
 
+
+    private byte[] buildParameters(Facture newFacture, JasperReport jasperReport) throws JRException {
         Map<String, Object> params = this.buildReportParameters(newFacture);
 
         List<Map<String, Object>> dataList = this.buildReportData(new MouvementDto(newFacture.getMouvement()));
@@ -396,34 +448,88 @@ public class FactureImpl extends GenericServiceImpl<Facture, String ,FactureRepo
         return this.exportReportToPdf(jasperPrint);
     }
 
+    private byte[] getBytes(Facture newFacture , boolean isContrat) throws JRException {
+        JasperReport jasperReport ;
+        if(newFacture.getEtat().getCode().equals(cclPropertyService.getProformaCode())){
+            jasperReport = this.loadReportTemplate(cclPropertyService.getFactureProformaExportPath());
+        }else {
+            jasperReport = this.loadReportTemplate(cclPropertyService.getFactureReelleExportPath());
+        }
+        if(isContrat){
+            jasperReport = this.loadReportTemplate(cclPropertyService.getContratExportPath());
+        }
+
+        return buildParameters(newFacture, jasperReport);
+    }
+
 
     @Override
     public void sendEmailForFactureWithPdf(String idFacture, String[] destinataires)  {
         try{
 
             Facture newFacture = this.findById(idFacture);
-            byte[] pdfFacture = this.getBytes(newFacture);
+            byte[] pdfFacture = this.getBytes(newFacture , false);
+            String objet = "Envoi de facture proforma";
+            String message = "";
+            String filename = "proforma.pdf";
+//            if (newFacture.getEtat().getCode().equals(cclPropertyService.getProformaCode())) {
+            message = "Bonjour,\n\nVeuillez trouver ci-joint la facture proforma correspondant à votre réservation.\n\n" +
+                    "Nous vous remercions de votre confiance et restons à votre disposition pour toute question.\n\n" +
+                    "Cordialement,\nL'équipe de CNaPS Madagascar\n\n" +
+                    "---\nCet e-mail a été envoyé depuis une adresse no-reply. Merci de ne pas y répondre.";
+//            }
+//            if (newFacture.getEtat().getCode().equals(cclPropertyService.getReelleCode())) {
+//                objet = "Envoi de votre facture définitive pour réservation";
+//                filename = "facture.pdf";
+//                message = "Bonjour,\n\nVeuillez trouver ci-joint la facture définitive correspondant à votre réservation.\n\n" +
+//                        "Nous vous remercions pour votre règlement et restons à votre disposition pour toute question.\n\n" +
+//                        "Cordialement,\nL'équipe de CNaPS Madagascar";
+//            }
+
+              this.emailService.sendEmailWithPdfBytes(destinataires, objet, message, pdfFacture, filename);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendEmailForPaiementWithPdf(String idPaiement, String[] destinataires)  {
+        try{
+
+            byte[] pdfFacture = this.getBytePdfPaiement(idPaiement);
+//            Facture newFacture = this.paiementService.findById(idPaiement).getFacture();
             String objet = "";
             String message = "";
             String filename = "";
+            objet = "Envoi de votre facture pour votre paiement de réservation";
+            filename = "facture.pdf";
+            message = "Bonjour,\n\nVeuillez trouver ci-joint la facture correspondant à votre paiement précédent de votre réservation.\n\n" +
+                    "Nous vous remercions pour votre règlement et restons à votre disposition pour toute question.\n\n" +
+                    "Cordialement,\nL'équipe de CNaPS Madagascar\n\n" +
+                    "---\nCet e-mail a été envoyé depuis une adresse no-reply. Merci de ne pas y répondre.";
+            this.emailService.sendEmailWithPdfBytes(destinataires, objet, message, pdfFacture, filename);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
-            if (newFacture.getEtat().getCode().equals(cclPropertyService.getProformaCode())) {
-                objet = "Envoi de votre facture proforma pour réservation";
-                filename = "proforma.pdf";
-                message = "Bonjour,\n\nVeuillez trouver ci-joint la facture proforma correspondant à votre réservation.\n\n" +
-                        "Nous vous remercions de votre confiance et restons à votre disposition pour toute question.\n\n" +
-                        "Cordialement,\nL'équipe de CNaPS Madagascar";
-            }
+    @Override
+    public void sendEmailForContratWithPdf(String idFacture, String[] destinataires)  {
+        try{
 
-            if (newFacture.getEtat().getCode().equals(cclPropertyService.getReelleCode())) {
-                objet = "Envoi de votre facture définitive pour réservation";
-                filename = "facture.pdf";
-                message = "Bonjour,\n\nVeuillez trouver ci-joint la facture définitive correspondant à votre réservation.\n\n" +
-                        "Nous vous remercions pour votre règlement et restons à votre disposition pour toute question.\n\n" +
-                        "Cordialement,\nL'équipe de CNaPS Madagascar";
-            }
-
-              this.emailService.sendEmailWithPdfBytes(destinataires, objet, message, pdfFacture, filename);
+            byte[] pdfFacture = this.buildContratPdf(idFacture);
+            String objet = "";
+            String message = "";
+            String filename = "";
+            objet = "Envoi de votre contrat à signer pour votre réservation";
+            filename = "contrat.pdf";
+            message = "Bonjour,\n\nVeuillez trouver ci-joint le contrat correspondant à votre réservation.\n\n" +
+                    "Nous vous remercions pour votre confiance et restons à votre disposition pour toute question.\n\n" +
+                    "Cordialement,\nL'équipe de CNaPS Madagascar\n\n" +
+                    "---\nCet e-mail a été envoyé depuis une adresse no-reply. Merci de ne pas y répondre.";
+            this.emailService.sendEmailWithPdfBytes(destinataires, objet, message, pdfFacture, filename);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

@@ -96,5 +96,9 @@ public class CclPropertyService {
     public String getFactureReelleExportPath(){
         return cclPropertyService.getFactureReelleExportPath();
     }
+    public String getContratExportPath(){
+        return cclPropertyService.getContratExportPath();
+
+    }
 
 }

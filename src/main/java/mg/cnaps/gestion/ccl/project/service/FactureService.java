@@ -18,9 +18,13 @@ import java.util.Map;
 
 
 public interface FactureService extends GenericService<Facture, String> {
-     List<FactureDto> getFacturesReellePayeByMouvement_Id(String mouvementId);
+    List<Facture> getFacturesByMouvement_Id_findAll(String mouvementId);
 
-     List<FactureDto> getFacturesByMouvement_Id(String mouvementId);
+    List<FactureDto> getFacturesReellePayeByMouvement_Id(String mouvementId);
+
+    byte[] getBytePdfPaiement(String idPaiement);
+
+    List<FactureDto> getFacturesByMouvement_Id(String mouvementId);
 
      FactureDto findByIdWithReste(String id);
 
@@ -62,5 +66,11 @@ public interface FactureService extends GenericService<Facture, String> {
 
     byte[] buildFacturePdfWithFacture(Facture newFacture) throws JRException;
 
-    void sendEmailForFactureWithPdf(String idFacture, String[] destinataires) throws JRException, MessagingException;
+    byte[] buildContratPdf(String idFacture) throws JRException;
+
+    void sendEmailForFactureWithPdf(String idFacture, String[] destinataires) ;
+
+    void sendEmailForPaiementWithPdf(String idPaiement, String[] destinataires);
+
+    void sendEmailForContratWithPdf(String idFacture, String[] destinataires);
 }
